@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#0b1020">
+<title>ועד בית — הפתרון החכם לניהול הבניין</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b1020;
+  --bg-2: #111827;
+  --panel: #1a2236;
+  --panel-2: #243049;
+  --border: #2a374f;
+  --text: #e8ecf4;
+  --text-2: #b9c2d6;
+  --muted: #7a8499;
+  --accent: #7ca7ff;
+  --accent-2: #5b8dee;
+  --teal: #4dd0e1;
+  --success: #34d399;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --purple: #c084fc;
+  --whatsapp: #25D366;
+  --whatsapp-dark: #075E54;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background:
+    radial-gradient(ellipse at top right, rgba(124,167,255,0.10), transparent 60%),
+    radial-gradient(ellipse at bottom left, rgba(192,132,252,0.08), transparent 60%),
+    var(--bg);
+  font-family: 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text);
+  line-height: 1.5;
+  font-size: 16px;
+  overflow-x: hidden;
+  padding-bottom: 80px; /* space for sticky CTA */
+}
+
+img { max-width: 100%; display: block; }
+
+/* ============== Hero ============== */
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  padding: 0 20px 60px;
+  background:
+    linear-gradient(to bottom,
+      rgba(11,16,32,0.10) 0%,
+      rgba(11,16,32,0.10) 25%,
+      rgba(11,16,32,0.55) 55%,
+      rgba(11,16,32,0.92) 80%,
+      rgba(11,16,32,1) 100%),
+    url('screenshots/1.png') center center / cover no-repeat,
+    var(--bg);
+}
+
+.hero-logo {
+  width: 88px;
+  height: 88px;
+  background: rgba(13, 100, 130, 0.20);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(77, 208, 225, 0.45);
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 38px;
+  color: rgba(255,255,255,0.96);
+  letter-spacing: -1.5px;
+  box-shadow:
+    0 0 50px rgba(77, 208, 225, 0.30),
+    0 12px 30px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  margin-bottom: 22px;
+}
+
+.hero-title {
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  background: linear-gradient(135deg, #fff 0%, #b9c2d6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 14px;
+}
+
+.hero-tagline {
+  font-size: 18px;
+  color: var(--teal);
+  font-weight: 600;
+  margin-bottom: 32px;
+}
+
+.hero-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 10px 18px;
+  border-radius: 100px;
+  font-size: 14px;
+  color: var(--text-2);
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+}
+.hero-phone strong { color: #fff; font-weight: 700; }
+
+.scroll-cue {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px;
+  color: var(--accent);
+  animation: bounce 1.6s infinite;
+  opacity: 0.7;
+}
+@keyframes bounce {
+  0%, 100% { transform: translate(-50%, 0); opacity: 0.5; }
+  50% { transform: translate(-50%, 8px); opacity: 1; }
+}
+
+/* ============== Sections ============== */
+section {
+  padding: 56px 20px;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(124,167,255,0.10);
+  border: 1px solid rgba(124,167,255,0.25);
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+}
+
+h2.section-title {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 14px;
+  letter-spacing: -0.02em;
+}
+
+p.section-lead {
+  font-size: 16px;
+  color: var(--text-2);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+/* ============== Cards ============== */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 14px;
+}
+
+.card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(124,167,255,0.12);
+  border: 1px solid rgba(124,167,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 14px;
+}
+
+.card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.card p {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+/* Color variants */
+.card.danger .card-icon { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.30); }
+.card.success .card-icon { background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.30); }
+.card.warning .card-icon { background: rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.30); }
+.card.purple .card-icon { background: rgba(192,132,252,0.12); border-color: rgba(192,132,252,0.30); }
+.card.teal .card-icon { background: rgba(77,208,225,0.12); border-color: rgba(77,208,225,0.30); }
+
+/* ============== Pain divider ============== */
+.pain-bottom {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 24px;
+  letter-spacing: -0.01em;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ============== Highlight section (live debt) ============== */
+.highlight {
+  background: linear-gradient(135deg, rgba(239,68,68,0.10), rgba(239,68,68,0.02));
+  border: 1px solid rgba(239,68,68,0.40);
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 18px;
+}
+.highlight .badge {
+  display: inline-block;
+  background: var(--danger);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.highlight h3 {
+  color: var(--danger);
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+.highlight p {
+  color: var(--text-2);
+  font-size: 14px;
+}
+
+/* Apartment card mockup (mobile-shrunk) */
+.apt-mock {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 14px;
+}
+.apt-mock-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.apt-mock-name {
+  font-weight: 700;
+  font-size: 15px;
+}
+.apt-mock-sub {
+  font-size: 11px;
+  color: var(--muted);
+}
+.apt-mock-debt {
+  text-align: left;
+}
+.apt-mock-debt .label {
+  font-size: 10px;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+.apt-mock-debt .value {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--danger);
+}
+.apt-mock-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  font-size: 13px;
+  border-bottom: 1px dashed rgba(255,255,255,0.05);
+}
+.apt-mock-row:last-child { border-bottom: none; }
+.apt-mock-row .month { color: var(--text-2); }
+.apt-mock-row .amt { font-weight: 600; color: var(--danger); font-variant-numeric: tabular-nums; }
+
+/* ============== Real-time debt callout ============== */
+.live-callout {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.40);
+  color: var(--danger);
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.live-callout .pulse {
+  width: 7px;
+  height: 7px;
+  background: var(--danger);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.5); }
+}
+
+/* ============== Image hero in section ============== */
+.section-image {
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.section-image img { width: 100%; }
+
+/* ============== Comparison ============== */
+.compare {
+  display: grid;
+  gap: 14px;
+}
+.compare-item {
+  background: var(--panel);
+  border-radius: 14px;
+  padding: 18px;
+  position: relative;
+}
+.compare-item.before {
+  border: 1px solid rgba(239,68,68,0.30);
+  background: linear-gradient(135deg, rgba(239,68,68,0.06), rgba(239,68,68,0.01));
+}
+.compare-item.after {
+  border: 1px solid rgba(52,211,153,0.40);
+  background: linear-gradient(135deg, rgba(52,211,153,0.08), rgba(52,211,153,0.01));
+}
+.compare-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.before .compare-label { color: var(--danger); }
+.after .compare-label { color: var(--success); }
+.compare-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.compare-list li {
+  font-size: 14px;
+  padding: 6px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--text-2);
+}
+.compare-list li::before {
+  flex-shrink: 0;
+  font-weight: 700;
+}
+.before .compare-list li::before { content: '✗'; color: var(--danger); }
+.after .compare-list li::before { content: '✓'; color: var(--success); }
+
+/* ============== Pricing ============== */
+.pricing-card {
+  background: linear-gradient(135deg, rgba(124,167,255,0.10), rgba(192,132,252,0.06));
+  border: 1.5px solid rgba(124,167,255,0.40);
+  border-radius: 22px;
+  padding: 28px 22px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.price-amount {
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 8px 0 4px;
+}
+.price-period {
+  font-size: 16px;
+  color: var(--text-2);
+  margin-bottom: 18px;
+}
+.price-note {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--whatsapp-dark);
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 17px;
+  margin-bottom: 12px;
+  box-shadow: 0 10px 30px rgba(7,94,84,0.40);
+}
+.cta-btn:active { transform: scale(0.98); }
+.cta-btn .ico { font-size: 22px; }
+
+.cta-btn.secondary {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  box-shadow: none;
+}
+
+/* ============== Roadmap pills ============== */
+.roadmap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.roadmap-pill {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 12px;
+  text-align: center;
+}
+.roadmap-pill .ico {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+.roadmap-pill .label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  line-height: 1.3;
+}
+
+/* ============== Closing ============== */
+.closing {
+  min-height: 80vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+  background:
+    linear-gradient(to bottom,
+      rgba(11,16,32,0.40) 0%,
+      rgba(11,16,32,0.85) 50%,
+      rgba(11,16,32,0.97) 100%),
+    url('screenshots/14.png') center center / cover no-repeat,
+    var(--bg);
+}
+.closing-logo {
+  width: 76px;
+  height: 76px;
+  background: rgba(13, 100, 130, 0.20);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(77, 208, 225, 0.45);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 32px;
+  color: rgba(255,255,255,0.96);
+  letter-spacing: -1.5px;
+  margin-bottom: 18px;
+  box-shadow:
+    0 0 40px rgba(77, 208, 225, 0.30),
+    0 10px 24px rgba(0, 0, 0, 0.45);
+}
+.closing h2 {
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #fff 0%, #b9c2d6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+.closing .sub {
+  font-size: 15px;
+  color: var(--text-2);
+  margin-bottom: 36px;
+}
+.closing .tag {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--teal);
+  letter-spacing: -0.01em;
+  line-height: 1.5;
+}
+
+/* ============== Sticky bottom CTA ============== */
+.sticky-cta {
+  position: fixed;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  background: var(--whatsapp-dark);
+  color: #fff;
+  padding: 14px 18px;
+  border-radius: 14px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+  z-index: 100;
+  transform: translateY(100px);
+  transition: transform 0.4s ease;
+}
+.sticky-cta.visible {
+  transform: translateY(0);
+}
+.sticky-cta .ico { font-size: 18px; }
+
+/* ============== Reveal animation ============== */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============== Small screens tweaks ============== */
+@media (max-width: 360px) {
+  .hero-title { font-size: 38px; }
+  .closing h2 { font-size: 30px; }
+  h2.section-title { font-size: 24px; }
+  section { padding: 48px 16px; }
+}
+
+/* ============== Larger phones / tablets ============== */
+@media (min-width: 600px) {
+  body { font-size: 17px; }
+  .hero-title { font-size: 56px; }
+  h2.section-title { font-size: 32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============== HERO ============== -->
+<header class="hero">
+  <div class="hero-logo">VB</div>
+  <h1 class="hero-title">ועד בית</h1>
+  <p class="hero-tagline">הפתרון החכם לניהול הבניין</p>
+  <a class="hero-phone" href="tel:0527246200">📞 <strong>052-7246200</strong></a>
+  <div class="scroll-cue">⌄</div>
+</header>
+
+<!-- ============== THE PAIN ============== -->
+<section class="reveal">
+  <span class="eyebrow">המציאות היומיומית</span>
+  <h2 class="section-title">מנהל ועד הבית? אתה מכיר את זה.</h2>
+  <p class="section-lead">רוב הוועדים עדיין מנהלים את הכסף בשיטות מהמאה הקודמת — ומשלמים על זה בזמן, בעצבים ובאמון.</p>
+
+  <div class="card danger">
+    <div class="card-icon">📊</div>
+    <h3>אקסל מסובך מ-3 שנים</h3>
+    <p>גיליון עם 25 לשוניות שאף אחד חוץ ממך לא מבין. כל שינוי קטן = שעה של תיקונים.</p>
+  </div>
+  <div class="card warning">
+    <div class="card-icon">🤔</div>
+    <h3>"מי שילם החודש?"</h3>
+    <p>לבדוק כל תנועת בנק ידנית, לזהות שמות, לסמן בטבלה. זמן יקר על משימה חוזרת.</p>
+  </div>
+  <div class="card purple">
+    <div class="card-icon">📂</div>
+    <h3>חשבוניות מפוזרות בכל מקום</h3>
+    <p>חשמל בתיקייה, ניקיון במייל, ביטוח אצל הגזבר הקודם. כשמישהו שואל — שעות חיפוש.</p>
+  </div>
+  <div class="card danger">
+    <div class="card-icon">🔄</div>
+    <h3>גרסאות סותרות</h3>
+    <p>הגזבר אומר משהו, הסגן מציג מספרים אחרים, האסיפה הופכת למשפט.</p>
+  </div>
+
+  <div class="pain-bottom">צריך לבנות את זה אחרת.</div>
+</section>
+
+<!-- ============== SOLUTION ============== -->
+<section class="reveal">
+  <span class="eyebrow">הפתרון</span>
+  <h2 class="section-title">דשבורד אחד. שולט בכל הבניין.</h2>
+  <p class="section-lead">מערכת אחת שמרכזת גבייה, ספקים, חשבוניות, חוזים, דוחות וצפיות — בעברית, בהתאמה מלאה למציאות של ועד בית בישראל.</p>
+
+  <div class="card success">
+    <div class="card-icon">💰</div>
+    <h3>גבייה אוטומטית</h3>
+    <p>טוען קובץ עו"ש מהבנק — המערכת מזהה לבד מי שילם, מתי, וכמה. ללא הקלדה, ללא טעויות.</p>
+  </div>
+  <div class="card teal">
+    <div class="card-icon">📤</div>
+    <h3>מעקב ספקים אוטומטי</h3>
+    <p>חשמל, ניהול, ביטוח — המערכת מזהה כל תשלום מהבנק על פי שם הספק. אתה רק רואה את הסיכום.</p>
+  </div>
+  <div class="card purple">
+    <div class="card-icon">📊</div>
+    <h3>דוחות מקצועיים</h3>
+    <p>גרפים מקצועיים, השוואת חודשים, חוב לפי דירה — מצגת מיידית לישיבת ועד.</p>
+  </div>
+  <div class="card warning">
+    <div class="card-icon">⚡</div>
+    <h3>מהיר ופשוט להתחלה</h3>
+    <p>קליטת אקסל אחת ומתחילים. ללא הטמעות, ללא הדרכות, ללא קצין שירות.</p>
+  </div>
+</section>
+
+<!-- ============== LIVE DEBT (Apartment Card) ============== -->
+<section class="reveal">
+  <div class="live-callout"><span class="pulse"></span>חוב חי בכל רגע</div>
+  <h2 class="section-title">לדעת בכל שניה — כמה כל דייר חייב</h2>
+  <p class="section-lead">לא טבלה שמתעדכנת פעם בחודש. <strong>חישוב חי</strong> שמתעדכן ברגע שעולה תנועת בנק חדשה. גם 3 שנים אחורה — כולל יתרות פתיחה והנחות מיוחדות.</p>
+
+  <div class="apt-mock">
+    <div class="apt-mock-head">
+      <div>
+        <div class="apt-mock-name">דירה 26 · שירה לוי</div>
+        <div class="apt-mock-sub">דמי וועד · כניסה: 01/2024</div>
+      </div>
+      <div class="apt-mock-debt">
+        <div class="label">חוב פתוח</div>
+        <div class="value">₪ 2,260</div>
+      </div>
+    </div>
+    <div class="apt-mock-row"><span class="month">פברואר 2026</span><span class="amt">₪ 565</span></div>
+    <div class="apt-mock-row"><span class="month">מרץ 2026</span><span class="amt">₪ 565</span></div>
+    <div class="apt-mock-row"><span class="month">אפריל 2026</span><span class="amt">₪ 565</span></div>
+    <div class="apt-mock-row"><span class="month">מאי 2026</span><span class="amt">₪ 565</span></div>
+  </div>
+</section>
+
+<!-- ============== SUPPLIERS ============== -->
+<section class="reveal">
+  <span class="eyebrow">ספקים</span>
+  <h2 class="section-title">החשבונות של הבניין — תחת בקרה</h2>
+  <p class="section-lead">המערכת מזהה לבד תשלומים יוצאים מהבנק לפי שם הספק. תדירויות גמישות (חודשי, רבעוני, שנתי) וגם ספקים בסכום משתנה — חשמל, מים — שמופקים מהם ממוצעים.</p>
+
+  <div class="card teal">
+    <div class="card-icon">🏷️</div>
+    <h3>זיהוי לפי שם בבנק</h3>
+    <p>"חברת חשמל" בעו"ש = שיוך אוטומטי לספק החשמל. אין הקלדה ידנית.</p>
+  </div>
+  <div class="card success">
+    <div class="card-icon">⏱️</div>
+    <h3>תדירויות גמישות</h3>
+    <p>חודשי, דו-חודשי, רבעוני, חצי-שנתי, שנתי. ביטוח שנתי לא יציג חוב כל חודש.</p>
+  </div>
+  <div class="card warning">
+    <div class="card-icon">📈</div>
+    <h3>סכום משתנה</h3>
+    <p>ספק שלא יודעים מראש כמה ישלמו — מצב מיוחד שמפיק ממוצעים לתחזיות.</p>
+  </div>
+</section>
+
+<!-- ============== DOCUMENTS ============== -->
+<section class="reveal">
+  <span class="eyebrow">תיעוד דיגיטלי</span>
+  <h2 class="section-title">חוזים וחשבוניות — בלחיצה אחת</h2>
+  <p class="section-lead">צרף <strong>חוזה התקשרות</strong> בכרטיס הספק. צרף <strong>חשבונית</strong> לכל תשלום בודד. הכל מאוחסן בתוך המערכת — גם 5 שנים אחורה זמין מיידית.</p>
+
+  <div class="card purple">
+    <div class="card-icon">📎</div>
+    <h3>חוזים בכרטיס הספק</h3>
+    <p>חוזה התקשרות עם חברת ניהול, ביטוח, ניקיון — מצורף ישירות לספק. אין יותר חיפושים במייל.</p>
+  </div>
+  <div class="card teal">
+    <div class="card-icon">🧾</div>
+    <h3>חשבונית לכל תשלום</h3>
+    <p>בכל תנועת תשלום בודדת אפשר לצרף את החשבונית המקבילה. דייר רוצה לראות הוכחה? מציג בקליק.</p>
+  </div>
+</section>
+
+<!-- ============== REPORTS ============== -->
+<section class="reveal">
+  <span class="eyebrow">דוחות</span>
+  <h2 class="section-title">מצגת לאסיפה — מוכנה תוך שניות</h2>
+  <p class="section-lead">דוחות מקצועיים שמדברים בעצמם. חוב לפי דירה, גבייה לפי חודש, מאזן הוצאות-הכנסות. שולח באקסל, PDF, או צילום מסך — מה שצריך.</p>
+
+  <div class="section-image">
+    <img src="screenshots/dashboard.png" alt="דשבורד דוחות וגרפים">
+  </div>
+</section>
+
+<!-- ============== PRIVACY ============== -->
+<section class="reveal">
+  <span class="eyebrow">פרטיות</span>
+  <h2 class="section-title">אין שרת. אין מתווך. אין צד שלישי.</h2>
+  <p class="section-lead">המערכת רצה במחשב שלך. הנתונים נשמרים מקומית — אצלך, לא בענן של מישהו אחר. אף אחד לא רואה את הכספים של הבניין שלך, אפילו לא אנחנו.</p>
+
+  <div class="card success">
+    <div class="card-icon">🔒</div>
+    <h3>שמירה מקומית בלבד</h3>
+    <p>כל המידע שמור על הדפדפן שלך. ללא חשבון, ללא הרשמה, ללא העלאה לענן.</p>
+  </div>
+  <div class="card teal">
+    <div class="card-icon">📤</div>
+    <h3>גיבוי מתי שאתה רוצה</h3>
+    <p>כפתור אחד — מקבל קובץ JSON. שומר במייל, ב-Drive, איפה שנוח לך. אתה השליט.</p>
+  </div>
+</section>
+
+<!-- ============== COMPARISON ============== -->
+<section class="reveal">
+  <span class="eyebrow">השוואה</span>
+  <h2 class="section-title">לפני / אחרי</h2>
+  <p class="section-lead">הקפיצה מאקסל למערכת — לא רק חיסכון בזמן. שינוי באיכות החיים של הגזבר.</p>
+
+  <div class="compare">
+    <div class="compare-item before">
+      <div class="compare-label">⛔ לפני</div>
+      <ul class="compare-list">
+        <li>שעות בכל חודש על חישובים ידניים</li>
+        <li>"מי שילם?" — בדיקה ידנית של כל שורה</li>
+        <li>חשבוניות מפוזרות במייל, וואטסאפ, מגירה</li>
+        <li>טעויות בחישובים = ויכוחים באסיפה</li>
+        <li>גרסאות סותרות בין הגזבר לסגן</li>
+      </ul>
+    </div>
+    <div class="compare-item after">
+      <div class="compare-label">✅ אחרי</div>
+      <ul class="compare-list">
+        <li>זיהוי אוטומטי של תשלומים מהבנק</li>
+        <li>חוב חי בכל רגע — לכל דייר</li>
+        <li>חוזים וחשבוניות מאוגדים במערכת</li>
+        <li>FIFO חוצה-מקורות = חישוב נכון</li>
+        <li>אמת אחת. ועד אחד. שקט.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ROADMAP ============== -->
+<section class="reveal">
+  <span class="eyebrow">בדרך</span>
+  <h2 class="section-title">מה שמגיע בקרוב</h2>
+  <p class="section-lead">המערכת ממשיכה להתפתח. אנחנו עובדים על השלב הבא:</p>
+
+  <div class="roadmap-grid">
+    <div class="roadmap-pill">
+      <div class="ico">📱</div>
+      <div class="label">אפליקציה לנייד</div>
+    </div>
+    <div class="roadmap-pill">
+      <div class="ico">☁️</div>
+      <div class="label">סנכרון לענן (אופציונלי)</div>
+    </div>
+    <div class="roadmap-pill">
+      <div class="ico">💳</div>
+      <div class="label">תשלום בכרטיס אשראי</div>
+    </div>
+    <div class="roadmap-pill">
+      <div class="ico">🏠</div>
+      <div class="label">ניהול השכרת חדרים</div>
+    </div>
+    <div class="roadmap-pill">
+      <div class="ico">🧾</div>
+      <div class="label">הפקת קבלות אוטומטיות</div>
+    </div>
+    <div class="roadmap-pill">
+      <div class="ico">✨</div>
+      <div class="label">ועוד הרבה...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PRICING / CTA ============== -->
+<section class="reveal" id="cta">
+  <span class="eyebrow">מחיר</span>
+  <h2 class="section-title">פשוט. שקוף. הוגן.</h2>
+  <p class="section-lead">מחיר חודשי קבוע. בלי הפתעות, בלי תוספות, בלי לוחות זמנים מסובכים.</p>
+
+  <div class="pricing-card">
+    <div class="price-amount">₪110</div>
+    <div class="price-period">לחודש · לבניין שלם</div>
+    <div class="price-note">כולל את כל הפיצ'רים. תמיכה ישירה ממני.</div>
+  </div>
+
+  <a class="cta-btn" href="https://wa.me/972527246200?text=שלום%2C%20קראתי%20את%20המצגת%20של%20מערכת%20ועד%20הבית%20ואשמח%20לשמוע%20עוד">
+    <span class="ico">💬</span>
+    דבר איתי בוואטסאפ
+  </a>
+  <a class="cta-btn secondary" href="tel:0527246200">
+    <span class="ico">📞</span>
+    התקשר: 052-7246200
+  </a>
+</section>
+
+<!-- ============== CLOSING ============== -->
+<footer class="closing">
+  <div class="closing-logo">VB</div>
+  <h2>ועד בית</h2>
+  <div class="sub">הפתרון החכם לניהול הבניין</div>
+  <div class="tag">פחות עבודה.<br>יותר שליטה.<br>הרבה יותר שקט.</div>
+</footer>
+
+<!-- ============== Sticky bottom CTA ============== -->
+<a class="sticky-cta" id="stickyCta" href="https://wa.me/972527246200?text=שלום%2C%20קראתי%20את%20המצגת%20של%20מערכת%20ועד%20הבית%20ואשמח%20לשמוע%20עוד">
+  <span class="ico">💬</span>
+  דבר איתי בוואטסאפ
+</a>
+
+<script>
+// Reveal sections on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in');
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Sticky CTA appears after user scrolls past hero
+const sticky = document.getElementById('stickyCta');
+const ctaSection = document.getElementById('cta');
+let ticking = false;
+
+function checkSticky() {
+  const heroHeight = document.querySelector('.hero').offsetHeight;
+  const scrollY = window.scrollY;
+  const ctaRect = ctaSection.getBoundingClientRect();
+  const ctaVisible = ctaRect.top < window.innerHeight && ctaRect.bottom > 0;
+
+  if (scrollY > heroHeight * 0.6 && !ctaVisible) {
+    sticky.classList.add('visible');
+  } else {
+    sticky.classList.remove('visible');
+  }
+  ticking = false;
+}
+
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    requestAnimationFrame(checkSticky);
+    ticking = true;
+  }
+}, { passive: true });
+</script>
+
+</body>
+</html>
