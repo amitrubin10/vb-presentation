@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ועד בית — הפתרון החכם לניהול הבניין</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b1020;
+  --bg-2: #111827;
+  --panel: #1a2236;
+  --panel-2: #243049;
+  --border: #2a374f;
+  --text: #e8ecf4;
+  --text-2: #b9c2d6;
+  --muted: #7a8499;
+  --accent: #7ca7ff;
+  --accent-2: #5b8dee;
+  --accent-glow: rgba(124,167,255,0.35);
+  --success: #34d399;
+  --success-bg: rgba(52,211,153,0.12);
+  --danger: #ef4444;
+  --danger-bg: rgba(239,68,68,0.12);
+  --warning: #f59e0b;
+  --warning-bg: rgba(245,158,11,0.12);
+  --purple: #c084fc;
+  --purple-bg: rgba(192,132,252,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  font-family: 'Heebo', -apple-system, sans-serif;
+  color: var(--text);
+}
+
+body {
+  background:
+    radial-gradient(ellipse at top right, rgba(124,167,255,0.08), transparent 50%),
+    radial-gradient(ellipse at bottom left, rgba(192,132,252,0.06), transparent 50%),
+    var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deck {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 64px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-30px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+/* ========== Slide layouts ========== */
+
+.slide-cover {
+  text-align: center;
+  /* Layered background: subtle dark gradient (transparent at top → darker at bottom)
+     so the image is the visual hero in the upper portion, and the text content
+     in the lower portion is fully readable. */
+  background:
+    linear-gradient(to bottom,
+      rgba(11,16,32,0.10) 0%,
+      rgba(11,16,32,0.10) 30%,
+      rgba(11,16,32,0.55) 55%,
+      rgba(11,16,32,0.92) 80%,
+      rgba(11,16,32,0.97) 100%),
+    url('screenshots/1.png') center center / cover no-repeat,
+    var(--bg);
+  /* Push the centered content cluster down so it sits below the floating
+     dashboard panel in the background image. Smaller padding-bottom = content
+     sits closer to the bottom edge, leaving the entire upper image visible. */
+  justify-content: flex-end;
+  padding-bottom: 80px;
+}
+/* Cover-slide logo: glassy translucent panel with teal accents that match the
+   floating dashboard panels in the background image — instead of the default
+   solid blue gradient that looked "pasted on". */
+.slide-cover .cover-logo {
+  width: 132px;
+  height: 132px;
+  background: rgba(13, 100, 130, 0.20);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(77, 208, 225, 0.40);
+  border-radius: 28px;
+  box-shadow:
+    0 0 70px rgba(77, 208, 225, 0.30),
+    0 16px 40px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.96);
+  font-size: 54px;
+  margin-bottom: 24px;
+}
+.slide-cover .cover-logo::after { display: none; }
+
+.slide h1 {
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.slide h2 {
+  font-size: clamp(24px, 3.4vw, 42px);
+  font-weight: 700;
+  margin-bottom: 28px;
+  line-height: 1.2;
+}
+
+.slide p {
+  font-size: clamp(15px, 1.5vw, 20px);
+  color: var(--text-2);
+  line-height: 1.6;
+  max-width: 900px;
+}
+
+.slide .lead {
+  font-size: clamp(18px, 1.9vw, 26px);
+  color: var(--text-2);
+  font-weight: 400;
+}
+
+/* Cover slide */
+.cover-logo {
+  width: 140px;
+  height: 140px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 32px;
+  box-shadow:
+    0 20px 60px rgba(124,167,255,0.35),
+    0 0 80px rgba(124,167,255,0.15);
+  letter-spacing: -2px;
+  position: relative;
+}
+.cover-logo::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 30px;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  z-index: -1;
+  opacity: 0.5;
+  filter: blur(20px);
+}
+
+.cover-title {
+  font-size: clamp(44px, 7vw, 84px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  background: linear-gradient(135deg, #fff 0%, #b9c2d6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 16px;
+}
+
+.cover-tagline {
+  font-size: clamp(18px, 2.4vw, 32px);
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 48px;
+  letter-spacing: 0.01em;
+}
+
+.cover-presenter {
+  position: absolute;
+  bottom: 48px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+}
+.cover-presenter strong { color: var(--text-2); font-weight: 600; }
+
+/* Generic title bar */
+.slide-title {
+  position: absolute;
+  top: 36px;
+  right: 64px;
+  left: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.slide-title h2 { margin: 0; font-size: clamp(22px, 2.4vw, 32px); }
+.slide-title .num { font-size: 12px; color: var(--muted); letter-spacing: 0.1em; }
+
+.slide-content {
+  width: 100%;
+  max-width: 1280px;
+  margin-top: 70px;
+}
+
+/* Pain grid */
+.pain-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.pain-card {
+  background: linear-gradient(135deg, var(--panel) 0%, rgba(26,34,54,0.6) 100%);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px 28px 28px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.pain-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 4px; height: 100%;
+  background: var(--danger);
+}
+.pain-icon {
+  font-size: 38px;
+  margin-bottom: 12px;
+  filter: grayscale(0.2);
+}
+.pain-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.pain-card p {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.pain-bottom {
+  text-align: center;
+  margin-top: 28px;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* Solution slide */
+.solution-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 36px;
+  align-items: stretch;
+}
+
+.dashboard-mockup {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.45),
+    0 0 0 1px rgba(255,255,255,0.04) inset;
+  position: relative;
+  overflow: hidden;
+}
+.mock-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+.mock-logo {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 14px;
+  color: #fff;
+  letter-spacing: -1px;
+}
+.mock-title { font-weight: 700; font-size: 15px; }
+.mock-sub { font-size: 11px; color: var(--muted); }
+
+.mock-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.mock-kpi {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  position: relative;
+  overflow: hidden;
+}
+.mock-kpi .stripe {
+  position: absolute;
+  top: 0; right: 0;
+  width: 3px; height: 100%;
+}
+.mock-kpi .label { font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+.mock-kpi .value { font-size: 20px; font-weight: 800; }
+.mock-kpi.income .stripe { background: var(--success); }
+.mock-kpi.income .value { color: var(--success); }
+.mock-kpi.exp .stripe { background: var(--danger); }
+.mock-kpi.exp .value { color: var(--danger); }
+.mock-kpi.expected .stripe { background: var(--accent); }
+.mock-kpi.expected .value { color: var(--accent); }
+.mock-kpi.debt .stripe { background: var(--warning); }
+.mock-kpi.debt .value { color: var(--warning); }
+
+.mock-table {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.mock-table-header {
+  display: grid;
+  grid-template-columns: 60px 1fr 95px 95px 100px;
+  background: var(--panel-2);
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.mock-table-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 95px 95px 100px;
+  padding: 10px 14px;
+  font-size: 12px;
+  border-top: 1px solid var(--border);
+}
+.mock-table-row strong { color: var(--accent); font-weight: 700; }
+.mock-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 600;
+}
+.badge-green { background: var(--success-bg); color: var(--success); }
+.badge-red { background: var(--danger-bg); color: var(--danger); }
+.badge-yellow { background: var(--warning-bg); color: var(--warning); }
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  justify-content: center;
+}
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.feature-item .ico {
+  width: 50px; height: 50px;
+  border-radius: 12px;
+  background: var(--accent-glow);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+.feature-item h4 {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.feature-item p {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+
+/* 2-column generic — larger ratio for the mockup, more space for the text on the side */
+.two-col {
+  display: grid;
+  grid-template-columns: 1.85fr 1fr;
+  gap: 32px;
+  align-items: stretch;
+}
+
+/* Apartment card mockup */
+.apt-mockup {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+.apt-header {
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.apt-header h3 { font-size: 17px; font-weight: 700; }
+.apt-header .sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.apt-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.apt-stat {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: right;
+}
+.apt-stat .l { font-size: 9px; color: var(--muted); }
+.apt-stat .v { font-size: 14px; font-weight: 700; margin-top: 2px; }
+.apt-stat.danger .v { color: var(--danger); }
+.apt-stat.success .v { color: var(--success); }
+.apt-stat.accent .v { color: var(--accent); }
+.apt-row {
+  display: grid;
+  grid-template-columns: 100px 80px 80px 90px 1fr;
+  gap: 8px;
+  padding: 7px 10px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  align-items: center;
+}
+.apt-row.head {
+  background: var(--panel-2);
+  border-radius: 6px;
+  border-top: none;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* Suppliers mockup */
+.sup-row {
+  display: grid;
+  grid-template-columns: 1fr 90px 80px 90px 90px;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  align-items: center;
+}
+.sup-row.head {
+  background: var(--panel-2);
+  border-top: none;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+}
+.sup-cat {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 10px;
+  background: var(--purple-bg);
+  color: var(--purple);
+}
+
+/* Charts mockup */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.chart-card-mock {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  position: relative;
+  height: 240px;
+}
+.chart-card-mock h4 { font-size: 14px; font-weight: 700; margin-bottom: 14px; }
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 160px;
+}
+.chart-bar {
+  flex: 1;
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  border-radius: 5px 5px 0 0;
+  position: relative;
+  min-height: 12px;
+}
+.chart-bar.danger {
+  background: linear-gradient(180deg, var(--danger), #b91c1c);
+}
+.chart-line {
+  width: 100%;
+  height: 160px;
+  position: relative;
+}
+.chart-line svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Privacy/local slide */
+.local-shield {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 100px;
+  margin: 0 auto 32px;
+  filter: drop-shadow(0 10px 30px rgba(124,167,255,0.4));
+}
+
+.benefits-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 32px;
+}
+.benefit-pill {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  text-align: center;
+}
+.benefit-pill .ico {
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+.benefit-pill h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.benefit-pill p { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+
+/* Comparison */
+.compare {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+.compare th, .compare td {
+  padding: 14px 18px;
+  font-size: 14px;
+  text-align: right;
+}
+.compare th {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border);
+}
+.compare th.us { color: var(--accent); font-size: 16px; }
+.compare td {
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.compare td:first-child { border-right: 1px solid var(--border); border-radius: 0 10px 10px 0; font-weight: 600; }
+.compare td:last-child { border-left: 1px solid var(--border); border-radius: 10px 0 0 10px; }
+.compare td.us { background: rgba(124,167,255,0.10); }
+.compare .yes { color: var(--success); font-weight: 700; }
+.compare .no { color: var(--danger); }
+.compare .partial { color: var(--warning); }
+
+/* CTA slide */
+.cta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+.pricing-card {
+  background: linear-gradient(135deg, var(--panel) 0%, rgba(26,34,54,0.6) 100%);
+  border: 2px solid var(--accent);
+  border-radius: 18px;
+  padding: 28px;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(124,167,255,0.2);
+}
+.pricing-card .badge {
+  position: absolute;
+  top: -12px;
+  right: 24px;
+  background: var(--accent);
+  color: #fff;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.pricing-card h3 { font-size: 22px; margin-bottom: 8px; }
+.pricing-card .price {
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+  margin: 12px 0;
+}
+.pricing-card .price small { font-size: 18px; font-weight: 500; color: var(--text-2); }
+.pricing-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 0;
+}
+.pricing-card li {
+  padding: 6px 0;
+  font-size: 14px;
+  color: var(--text-2);
+  position: relative;
+  padding-right: 22px;
+}
+.pricing-card li::before {
+  content: '✓';
+  position: absolute;
+  right: 0;
+  color: var(--success);
+  font-weight: 700;
+}
+
+.contact-block {
+  text-align: right;
+}
+.contact-block h3 {
+  font-size: 24px;
+  margin-bottom: 24px;
+  font-weight: 800;
+}
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+.contact-row .ico {
+  width: 44px; height: 44px;
+  border-radius: 11px;
+  background: var(--accent-glow);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.contact-row .label { font-size: 11px; color: var(--muted); }
+.contact-row .value { font-size: 17px; font-weight: 700; color: var(--text); margin-top: 2px; }
+
+.cta-button {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 16px 32px;
+  border-radius: 14px;
+  text-decoration: none;
+  box-shadow: 0 12px 32px rgba(124,167,255,0.35);
+  margin-top: 22px;
+  border: none;
+  cursor: pointer;
+}
+
+/* ========== Navigation ========== */
+.controls {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(17,24,39,0.85);
+  backdrop-filter: blur(8px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  z-index: 100;
+}
+.ctrl-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-2);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+.ctrl-btn:hover { background: var(--panel-2); color: var(--text); }
+.ctrl-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.dots {
+  display: flex;
+  gap: 6px;
+}
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.dot.active {
+  background: var(--accent);
+  width: 24px;
+  border-radius: 4px;
+}
+.slide-counter {
+  font-size: 13px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.help-hint {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  font-size: 11px;
+  color: var(--muted);
+  background: rgba(17,24,39,0.7);
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  z-index: 100;
+}
+
+/* Print: one slide per page, fully visible */
+@media print {
+  html, body { overflow: visible; height: auto; background: #fff; color: #000; }
+  body { display: block; }
+  .deck { width: 100%; height: auto; }
+  .slide {
+    position: relative;
+    inset: auto;
+    opacity: 1;
+    transform: none;
+    page-break-after: always;
+    height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .controls, .help-hint { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- Slide 1: Cover -->
+<section class="slide slide-cover active" data-slide="1">
+  <div class="cover-logo">VB</div>
+  <div class="cover-title">ועד בית</div>
+  <div class="cover-tagline">הפתרון החכם לניהול הבניין</div>
+  <div class="cover-presenter">
+    טלפון / וואטסאפ: <strong>052-7246200</strong>
+  </div>
+</section>
+
+<!-- Slide 2: The Pain -->
+<section class="slide" data-slide="2">
+  <div class="slide-title">
+    <h2>המציאות היומיומית של גזבר ועד הבית</h2>
+    <span class="num">2 / 15</span>
+  </div>
+  <div class="slide-content">
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">📊</div>
+        <h3>אקסל מסובך מ-3 שנים</h3>
+        <p>גיליון עם 25 לשוניות שאף אחד חוץ ממך לא מבין. כל שינוי קטן = שעה של תיקונים.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🤔</div>
+        <h3>"מי שילם החודש?"</h3>
+        <p>לבדוק כל תנועת בנק ידנית, לזהות שמות, לסמן בטבלה. זמן יקר על משימה חוזרת.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">📂</div>
+        <h3>חשבוניות מפוזרות בכל מקום</h3>
+        <p>חשמל בתיקייה, ניקיון במייל, ביטוח אצל הגזבר הקודם. כשמישהו שואל — שעות חיפוש.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🔄</div>
+        <h3>גרסאות סותרות</h3>
+        <p>הגזבר אומר משהו, הסגן מציג מספרים אחרים, האסיפה הופכת למשפט. לא יותר.</p>
+      </div>
+    </div>
+    <div class="pain-bottom">צריך לבנות את זה אחרת.</div>
+  </div>
+</section>
+
+<!-- Slide 3: The Solution — full-app showcase -->
+<section class="slide" data-slide="3">
+  <div class="slide-title">
+    <h2>הפתרון: דשבורד אחד שמרכז הכל</h2>
+    <span class="num">3 / 15</span>
+  </div>
+  <div class="slide-content" style="max-width:1400px;">
+    <div class="dashboard-mockup" style="padding:0;overflow:hidden;">
+      <!-- App header: logo + building name + date + settings -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(180deg, rgba(124,167,255,0.10), rgba(124,167,255,0.02));border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg, var(--accent), var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:17px;letter-spacing:-1px;box-shadow:0 4px 14px rgba(124,167,255,0.4);">VB</div>
+          <div>
+            <div style="font-weight:800;font-size:18px;line-height:1.1;">הרב משורר ישעיהו 6</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px;">יום שני, 4 במאי 2026</div>
+          </div>
+        </div>
+        <button style="background:linear-gradient(135deg, var(--accent), var(--accent-2));color:#fff;padding:9px 16px;border-radius:10px;font-size:12px;font-weight:700;border:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(124,167,255,0.3);">🏢 הגדרות הבניין</button>
+      </div>
+      <div style="padding:18px;">
+        <!-- Filter bar -->
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
+          <span style="font-size:11px;color:var(--muted);font-weight:600;">🔍 מסננים:</span>
+          <div style="padding:6px 11px;background:var(--panel-2);border:1px solid var(--border);border-radius:7px;font-size:11px;display:flex;align-items:center;gap:5px;">📅 ינואר 2026 → מאי 2026</div>
+          <div style="padding:6px 11px;background:var(--panel-2);border:1px solid var(--border);border-radius:7px;font-size:11px;">🏠 כל הדירות</div>
+          <div style="padding:6px 11px;background:var(--panel-2);border:1px solid var(--border);border-radius:7px;font-size:11px;">📊 כל הסטטוסים</div>
+        </div>
+        <!-- KPIs -->
+        <div class="mock-kpis" style="margin-bottom:14px;">
+          <div class="mock-kpi income"><div class="stripe"></div><div class="label">הכנסות לתקופה</div><div class="value">₪ 142K</div></div>
+          <div class="mock-kpi exp"><div class="stripe"></div><div class="label">הוצאות לתקופה</div><div class="value">₪ 98K</div></div>
+          <div class="mock-kpi expected"><div class="stripe"></div><div class="label">צפוי לתקופה</div><div class="value">₪ 158K</div></div>
+          <div class="mock-kpi debt"><div class="stripe"></div><div class="label">חוב פתוח</div><div class="value">₪ 16K</div></div>
+        </div>
+        <!-- Two-column body: table + side chart -->
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;">
+          <div class="mock-table">
+            <div class="mock-table-header">
+              <div>דירה</div><div>שם</div><div>צפוי</div><div>שולם</div><div>סטטוס</div>
+            </div>
+            <div class="mock-table-row">
+              <div><strong>1</strong></div><div>דודי ורבקה בן דוד</div><div>2,260</div><div>2,260</div><div><span class="mock-badge badge-green">שילם</span></div>
+            </div>
+            <div class="mock-table-row">
+              <div><strong>3</strong></div><div>אורי רוסנק</div><div>2,260</div><div>1,130</div><div><span class="mock-badge badge-yellow">חלקי</span></div>
+            </div>
+            <div class="mock-table-row">
+              <div><strong>19</strong></div><div>יניב והילה בוסי</div><div>2,260</div><div>2,260</div><div><span class="mock-badge badge-green">שילם</span></div>
+            </div>
+            <div class="mock-table-row">
+              <div><strong>26</strong></div><div>שירה לוי</div><div>2,260</div><div>0</div><div><span class="mock-badge badge-red">לא שילם</span></div>
+            </div>
+            <div class="mock-table-row">
+              <div><strong>33</strong></div><div>בן דוד אסף</div><div>3,345</div><div>0</div><div><span class="mock-badge badge-red">לא שילם</span></div>
+            </div>
+            <div class="mock-table-row">
+              <div><strong>44</strong></div><div>אריק סמולנסקי</div><div>1,695</div><div>1,695</div><div><span class="mock-badge badge-green">שילם</span></div>
+            </div>
+          </div>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px;position:relative;">
+            <div style="font-size:11px;font-weight:700;margin-bottom:8px;color:var(--text-2);">גבייה חודשית</div>
+            <div class="chart-bars" style="height:130px;gap:5px;">
+              <div class="chart-bar" style="height:55%;"></div>
+              <div class="chart-bar" style="height:72%;"></div>
+              <div class="chart-bar" style="height:65%;"></div>
+              <div class="chart-bar" style="height:88%;position:relative;"><div style="position:absolute;top:-30px;right:50%;transform:translateX(50%);background:rgba(17,24,39,0.95);border:1px solid var(--accent);padding:3px 7px;border-radius:5px;font-size:9px;white-space:nowrap;color:var(--accent);font-weight:600;direction:rtl;">אפר · ₪34K</div></div>
+              <div class="chart-bar" style="height:80%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-around;margin-top:6px;font-size:9px;color:var(--muted);">
+              <span>ינו</span><span>פבר</span><span>מרץ</span><span>אפר</span><span>מאי</span>
+            </div>
+            <div style="font-size:9px;color:var(--accent);margin-top:6px;text-align:center;">💡 hover לפרטים</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 4 features as horizontal pills below -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px;">
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:30px;margin-bottom:8px;">💰</div>
+        <h4 style="font-size:14px;font-weight:700;margin-bottom:4px;">גבייה אוטומטית</h4>
+        <p style="font-size:11px;color:var(--text-2);line-height:1.4;">זיהוי תנועות בנק וסטטוס מיידי</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:30px;margin-bottom:8px;">📤</div>
+        <h4 style="font-size:14px;font-weight:700;margin-bottom:4px;">מעקב ספקים</h4>
+        <p style="font-size:11px;color:var(--text-2);line-height:1.4;">ניהול, חשמל, ביטוח — אוטומטי</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:30px;margin-bottom:8px;">📊</div>
+        <h4 style="font-size:14px;font-weight:700;margin-bottom:4px;">דוחות מקצועיים</h4>
+        <p style="font-size:11px;color:var(--text-2);line-height:1.4;">מצגת מיידית לישיבת ועד</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:30px;margin-bottom:8px;">⚡</div>
+        <h4 style="font-size:14px;font-weight:700;margin-bottom:4px;">מהיר ופשוט</h4>
+        <p style="font-size:11px;color:var(--text-2);line-height:1.4;">קליטת אקסל אחת ומתחילים</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 4: Automatic Collection -->
+<section class="slide" data-slide="4">
+  <div class="slide-title">
+    <h2>גבייה אוטומטית — בלי ספירות ידניות</h2>
+    <span class="num">4 / 15</span>
+  </div>
+  <div class="slide-content">
+    <div class="two-col">
+      <div class="dashboard-mockup">
+        <div class="mock-header">
+          <div class="mock-logo">VB</div>
+          <div>
+            <div class="mock-title">טבלת גבייה</div>
+            <div class="mock-sub">חודש מאי 2026</div>
+          </div>
+        </div>
+        <div class="mock-table">
+          <div class="mock-table-header">
+            <div>דירה</div><div>שם</div><div>צפוי</div><div>שולם</div><div>סטטוס</div>
+          </div>
+          <div class="mock-table-row" style="background:rgba(34,197,94,0.06);">
+            <div><strong>5</strong></div><div>אבי כהן</div><div>565</div><div>565</div><div><span class="mock-badge badge-green">בנק 03/05</span></div>
+          </div>
+          <div class="mock-table-row" style="background:rgba(34,197,94,0.06);">
+            <div><strong>11</strong></div><div>יעל אברמוביץ</div><div>565</div><div>565</div><div><span class="mock-badge badge-green">בנק 02/05</span></div>
+          </div>
+          <div class="mock-table-row" style="background:rgba(245,158,11,0.06);">
+            <div><strong>19</strong></div><div>יניב בוסי</div><div>1,130</div><div>1,130</div><div><span class="mock-badge badge-yellow">FIFO</span></div>
+          </div>
+          <div class="mock-table-row" style="background:rgba(239,68,68,0.06);">
+            <div><strong>26</strong></div><div>שירה לוי</div><div>565</div><div>0</div><div><span class="mock-badge badge-red">חוב</span></div>
+          </div>
+          <div class="mock-table-row" style="background:rgba(34,197,94,0.06);">
+            <div><strong>44</strong></div><div>אריק סמולנסקי</div><div>1,695</div><div>1,695</div><div><span class="mock-badge badge-green">מראש</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="ico">🏦</div>
+          <div>
+            <h4>זיהוי אוטומטי מהבנק</h4>
+            <p>טוען קובץ עו"ש מהבנק — המערכת מזהה לבד מי שילם, מתי, וכמה. ללא הקלדה.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">⏳</div>
+          <div>
+            <h4>FIFO חוצה-מקורות</h4>
+            <p>תשלום של דייר עם חוב משלוש חודשים — נסגרים אוטומטית מהישן לחדש. עיקרון חשבונאי נכון.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">📅</div>
+          <div>
+            <h4>תמיכה ביתרות פתיחה</h4>
+            <p>גזבר חדש? הזן את החוב מהגזבר הקודם — המערכת תשלב את זה בכל החישובים.</p>
+          </div>
+        </div>
+        <div class="feature-item" style="background:linear-gradient(135deg, rgba(37,211,102,0.12), rgba(37,211,102,0.03));border:1px solid rgba(37,211,102,0.45);border-radius:12px;padding:14px;">
+          <div class="ico" style="background:linear-gradient(135deg, #25D366, #128C7E);color:#fff;box-shadow:0 4px 12px rgba(37,211,102,0.35);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </div>
+          <div style="flex:1;">
+            <h4 style="color:#25D366;">וואטסאפ בלחיצה</h4>
+            <p>פתיחת שיחה ישירה עם הדייר — הודעה מנוסחת מראש עם סכום החוב.</p>
+            <div style="margin-top:10px;background:#075E54;color:#fff;padding:10px 14px;border-radius:10px 10px 0 10px;font-size:13px;line-height:1.65;display:inline-block;max-width:100%;box-shadow:0 2px 8px rgba(0,0,0,0.35);">
+              שלום, פנייה מוועד הבית.<br>
+              דירה 26 — קיים חוב בסך <strong>₪1,130</strong>.<br>
+              נשמח להסדרה. תודה.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 5: Apartment Card -->
+<section class="slide" data-slide="5">
+  <div class="slide-title">
+    <h2>כרטיס דירה — לחיצה אחת, כל המידע</h2>
+    <span class="num">5 / 15</span>
+  </div>
+  <div class="slide-content">
+    <div class="two-col">
+      <div class="apt-mockup">
+        <div class="apt-header">
+          <h3>דירה 19 — יניב והילה בוסי <span style="color:var(--muted);font-weight:400;font-size:13px;">(ינואר 2026 – מאי 2026)</span></h3>
+          <div class="sub">טלפון: 050-1234567 &nbsp;|&nbsp; סוג דירה: 5 חדרים</div>
+        </div>
+        <div class="apt-stats">
+          <div class="apt-stat accent">
+            <div class="l">מחיר חודשי</div>
+            <div class="v">₪ 565</div>
+          </div>
+          <div class="apt-stat accent">
+            <div class="l">סה"כ צפוי</div>
+            <div class="v">₪ 3,955</div>
+          </div>
+          <div class="apt-stat success">
+            <div class="l">סה"כ שולם</div>
+            <div class="v">₪ 3,390</div>
+          </div>
+          <div class="apt-stat danger">
+            <div class="l">סה"כ חוב</div>
+            <div class="v">₪ 565</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+          <div class="apt-row head">
+            <div>חודש</div><div>צפוי</div><div>שולם</div><div>סטטוס</div><div>פירוט</div>
+          </div>
+          <div class="apt-row" style="background:rgba(124,167,255,0.06);">
+            <div><strong>יתרת פתיחה</strong></div><div>1,130</div><div>1,130</div><div><span class="mock-badge badge-green">סגור</span></div><div style="color:var(--muted);">FIFO 23/4</div>
+          </div>
+          <div class="apt-row">
+            <div>אפריל 2026</div><div>565</div><div>565</div><div><span class="mock-badge badge-green">שילם</span></div><div style="color:var(--muted);">בנק</div>
+          </div>
+          <div class="apt-row" style="background:rgba(239,68,68,0.04);">
+            <div>מאי 2026</div><div>565</div><div>0</div><div><span class="mock-badge badge-red">לא שילם</span></div><div>—</div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="ico">📋</div>
+          <div>
+            <h4>תצוגת כרטסת</h4>
+            <p>מעבר מהיר לתצוגה כרונולוגית של חיובים וזיכויים. כמו דף חשבון בבנק.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">💰</div>
+          <div>
+            <h4>תשלום ידני</h4>
+            <p>קיבלת מזומן/צ'ק/ביט? הזן בלחיצה. המערכת מצמידה לחודשים הנכונים.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">🟢</div>
+          <div>
+            <h4>וואטסאפ ישיר</h4>
+            <p>כפתור ירוק עם הודעה מוכנה: "חסר תשלום בסך ₪565 — נשמח להסדרה."</p>
+          </div>
+        </div>
+        <div class="feature-item" style="background:linear-gradient(135deg, rgba(239,68,68,0.10), rgba(239,68,68,0.02));border:1px solid rgba(239,68,68,0.40);border-radius:12px;padding:14px;">
+          <div class="ico" style="background:rgba(239,68,68,0.18);color:var(--danger);">⚡</div>
+          <div>
+            <h4 style="color:var(--danger);">חוב חי בכל רגע</h4>
+            <p>בכל פתיחת כרטיס דירה — אתה רואה מיד את החוב המעודכן: ה-OB, חודשים פתוחים, סכום מדויק. <strong>אין יותר "צריך לבדוק" — תמיד יודעים.</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 6: Building Configuration -->
+<section class="slide" data-slide="6">
+  <div class="slide-title">
+    <h2>הגדרת הבניין — מותאם לכל סוג בית</h2>
+    <span class="num">6 / 15</span>
+  </div>
+  <div class="slide-content">
+    <div class="two-col">
+      <div class="dashboard-mockup">
+        <div class="mock-header">
+          <div class="mock-logo" style="background:linear-gradient(135deg, var(--success), #16a34a);">⚙</div>
+          <div>
+            <div class="mock-title">הגדרות הבניין</div>
+            <div class="mock-sub">סוגי דירות · יתרות · נכסים · ספקים · גיבוי</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:14px;font-size:10px;flex-wrap:wrap;">
+          <div style="padding:7px 11px;background:var(--accent);color:#fff;border-radius:8px 8px 0 0;font-weight:700;">סוגי דירות</div>
+          <div style="padding:7px 11px;color:var(--muted);">יתרות פתיחה</div>
+          <div style="padding:7px 11px;color:var(--muted);">נכסים מושכרים</div>
+          <div style="padding:7px 11px;color:var(--muted);">ספקים</div>
+          <div style="padding:7px 11px;color:var(--muted);">גיבוי</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:11px;">
+            <div style="font-weight:700;font-size:12px;margin-bottom:4px;">5 חדרים</div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">56 דירות משויכות</div>
+            <div style="font-size:10px;padding:4px 7px;background:var(--bg-2);border-radius:4px;margin-bottom:3px;color:var(--muted);text-decoration:line-through;">1/2025 · ₪455</div>
+            <div style="font-size:10px;padding:4px 7px;background:var(--accent-glow);color:var(--accent);border-radius:4px;font-weight:600;">12/2025 · ₪565 ✓</div>
+          </div>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:11px;">
+            <div style="font-weight:700;font-size:12px;margin-bottom:4px;">פנטהאוז</div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">4 דירות משויכות</div>
+            <div style="font-size:10px;padding:4px 7px;background:var(--accent-glow);color:var(--accent);border-radius:4px;font-weight:600;">1/2025 · ₪780 ✓</div>
+          </div>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:11px;">
+            <div style="font-weight:700;font-size:12px;margin-bottom:4px;">דופלקס</div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">4 דירות משויכות</div>
+            <div style="font-size:10px;padding:4px 7px;background:var(--accent-glow);color:var(--accent);border-radius:4px;font-weight:600;">1/2025 · ₪1,000 ✓</div>
+          </div>
+          <div style="background:var(--panel);border:1px solid var(--purple);border-radius:9px;padding:11px;">
+            <div style="font-weight:700;font-size:12px;margin-bottom:4px;">חברי ועד <span style="font-size:9px;color:var(--purple);font-weight:500;">(קבוצה מותאמת)</span></div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">3 דירות משויכות</div>
+            <div style="font-size:10px;padding:4px 7px;background:var(--purple-bg);color:var(--purple);border-radius:4px;font-weight:600;">1/2025 · ₪283 ✓</div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="ico">🏠</div>
+          <div>
+            <h4>שיוך דירה לסוג</h4>
+            <p>כל דירה משויכת לסוג שמתאים לה — 5 חדרים, פנטהאוז, דופלקס. שינוי בלחיצה אחת, ללא הזנה ידנית.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">📜</div>
+          <div>
+            <h4>היסטוריית מחירים</h4>
+            <p>שינוי מחיר? המחיר הישן נשמר אוטומטית כתקופה היסטורית. חישובי החובות לחודשים הישנים נשארים נכונים.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">🅿️</div>
+          <div>
+            <h4>נכסים מושכרים</h4>
+            <p>חניות, מחסנים, מחסן ועד — כל נכס שמושכר לדייר או חיצוני, מנוהל בנפרד עם תשלום משלו.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">🎯</div>
+          <div>
+            <h4>קבוצות מותאמות</h4>
+            <p>חברי ועד עם הנחה? פטורים? יצירת קבוצה מותאמת בלחיצה — שייך אליה דירות עם מחיר משלהן.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 7: Suppliers -->
+<section class="slide" data-slide="7">
+  <div class="slide-title">
+    <h2>ספקים: שליטה מלאה על ההוצאות</h2>
+    <span class="num">7 / 15</span>
+  </div>
+  <div class="slide-content">
+    <div class="two-col">
+      <div class="dashboard-mockup">
+        <div class="mock-header">
+          <div class="mock-logo" style="background:linear-gradient(135deg, var(--purple), #9333ea);">📤</div>
+          <div>
+            <div class="mock-title">תשלומים לספקים</div>
+            <div class="mock-sub">7 ספקים פעילים · ינואר–אפריל 2026</div>
+          </div>
+        </div>
+        <div class="mock-kpis">
+          <div class="mock-kpi expected">
+            <div class="stripe"></div>
+            <div class="label">צפוי</div>
+            <div class="value">₪ 38K</div>
+          </div>
+          <div class="mock-kpi income">
+            <div class="stripe"></div>
+            <div class="label">שולם</div>
+            <div class="value">₪ 35K</div>
+          </div>
+          <div class="mock-kpi debt">
+            <div class="stripe"></div>
+            <div class="label">יתרה</div>
+            <div class="value">₪ 3K</div>
+          </div>
+          <div class="mock-kpi expected">
+            <div class="stripe" style="background:var(--purple);"></div>
+            <div class="label">פעילים</div>
+            <div class="value" style="color:var(--purple);">7</div>
+          </div>
+        </div>
+        <div class="mock-table">
+          <div class="sup-row head">
+            <div>שם</div><div>קטגוריה</div><div>תדירות</div><div>צפוי</div><div>שולם</div>
+          </div>
+          <div class="sup-row">
+            <div><strong>אלקטרה מעליות</strong></div><div><span class="sup-cat">מעליות</span></div><div>חודשי</div><div>4,000</div><div>4,000</div>
+          </div>
+          <div class="sup-row">
+            <div><strong>חברת חשמל</strong></div><div><span class="sup-cat">חשמל</span></div><div>דו-חודשי</div><div style="color:var(--muted);">משתנה</div><div>2,840</div>
+          </div>
+          <div class="sup-row">
+            <div><strong>אחזקה — אמיר</strong></div><div><span class="sup-cat">ניהול</span></div><div>חודשי</div><div>20,000</div><div>20,000</div>
+          </div>
+          <div class="sup-row">
+            <div><strong>חברת ניקיון</strong></div><div><span class="sup-cat">ניקיון</span></div><div>חודשי</div><div>6,000</div><div>5,000</div>
+          </div>
+          <div class="sup-row">
+            <div><strong>גנן</strong></div><div><span class="sup-cat">גנן</span></div><div>חודשי</div><div>3,200</div><div>3,200</div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="ico">🔎</div>
+          <div>
+            <h4>זיהוי לפי שם בבנק</h4>
+            <p>מילות מפתח לכל ספק — המערכת מזהה אוטומטית את התשלומים בבנק.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">💡</div>
+          <div>
+            <h4>תדירויות גמישות</h4>
+            <p>חודשי, דו-חודשי, רבעוני, חצי-שנתי, שנתי. ביטוח שנתי לא יציג חוב כל חודש.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">📈</div>
+          <div>
+            <h4>סכום משתנה (חשמל/מים)</h4>
+            <p>ספק שלא יודעים מראש כמה ישלמו — מצב מיוחד שמפיק ממוצעים לתחזיות.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 8: Document Attachments — invoices + contracts -->
+<section class="slide" data-slide="8">
+  <div class="slide-title">
+    <h2>תיעוד דיגיטלי — חשבוניות וחוזים בלחיצה</h2>
+    <span class="num">8 / 15</span>
+  </div>
+  <div class="slide-content">
+    <div class="two-col">
+      <!-- Mockup: a transaction row with a popup dialog above it -->
+      <div style="position:relative;">
+        <!-- Background context: supplier transaction with attach buttons -->
+        <div class="dashboard-mockup">
+          <div class="mock-header">
+            <div class="mock-logo" style="background:linear-gradient(135deg, var(--purple), #9333ea);">📤</div>
+            <div>
+              <div class="mock-title">אחזקה — אמיר</div>
+              <div class="mock-sub">תנועות בנק שזוהו</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:rgba(124,167,255,0.06);border:1px solid var(--border);border-radius:8px;">
+              <div>
+                <div>🏦 03/04/2026 · ₪5,000</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:3px;">תשלום ועד הבית - אמיר אחזקה</div>
+              </div>
+              <a style="display:inline-flex;align-items:center;gap:4px;background:rgba(34,197,94,0.18);color:var(--success);border:1px solid var(--success);padding:4px 10px;border-radius:5px;font-size:10px;font-weight:600;text-decoration:none;">📎 חשבונית מרץ</a>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:rgba(124,167,255,0.06);border:1px solid var(--border);border-radius:8px;">
+              <div>
+                <div>🏦 03/05/2026 · ₪5,000</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:3px;">תשלום ועד הבית - אמיר אחזקה</div>
+              </div>
+              <button style="display:inline-flex;align-items:center;gap:4px;background:transparent;color:var(--text-muted);border:1px dashed var(--border);padding:4px 10px;border-radius:5px;font-size:10px;cursor:pointer;">📎 צרף</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating popup: the attachment dialog in action -->
+        <div style="position:absolute;top:55%;left:50%;transform:translate(-50%,-30%);background:var(--panel-2);border:1px solid var(--accent);border-radius:14px;padding:18px;box-shadow:0 25px 60px rgba(0,0,0,0.6), 0 0 80px rgba(124,167,255,0.15);min-width:330px;z-index:5;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+            <span style="font-size:18px;">📎</span> צירוף חשבונית / קבלה
+          </div>
+          <div style="font-size:10px;color:var(--text-2);margin-bottom:14px;line-height:1.5;">
+            העלה את הקובץ ל-Google Drive / Dropbox, הדבק את הקישור כאן.
+          </div>
+          <div style="display:flex;flex-direction:column;gap:9px;">
+            <div>
+              <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px;">קישור (URL) *</label>
+              <div style="background:var(--panel);border:1px solid var(--accent);border-radius:6px;padding:7px 10px;font-size:10px;font-family:monospace;color:var(--text-2);direction:ltr;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">https://drive.google.com/file/d/1AbCxYz...</div>
+            </div>
+            <div>
+              <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px;">שם הקובץ</label>
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:11px;color:var(--text-primary);">חשבונית אפריל 2026</div>
+            </div>
+            <div>
+              <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px;">הערה (אופציונלי)</label>
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:11px;color:var(--text-2);font-style:italic;">כולל מע"מ</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;">
+            <button style="background:var(--accent);color:#fff;border:none;padding:7px 14px;border-radius:7px;font-size:11px;font-weight:700;">✓ שמור</button>
+            <button style="background:transparent;color:var(--text-2);border:1px solid var(--border);padding:7px 14px;border-radius:7px;font-size:11px;">ביטול</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column: 4 features explaining the value -->
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="ico">📑</div>
+          <div>
+            <h4>חוזה לכל ספק</h4>
+            <p>החוזה הסרוק שלכם, צמוד לכרטיס הספק לעולם — לא יאבד שוב.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">🧾</div>
+          <div>
+            <h4>חשבונית לכל תשלום</h4>
+            <p>צמודה ישירות לתנועת הבנק שאליה היא מתייחסת — אין יותר חיפושים.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">☁️</div>
+          <div>
+            <h4>הקבצים שלכם, אצלכם</h4>
+            <p>נשמרים ב-Google Drive / Dropbox שלכם — אנחנו רק שומרים את הקישור. ללא הגבלת נפח, גיבוי בענן.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">🔍</div>
+          <div>
+            <h4>זמין גם 10 שנים אחורה</h4>
+            <p>בישיבת ועד, בשיחה עם רואה החשבון, או בבדיקה רטרואקטיבית — הקובץ הנכון, בלחיצה.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 9: Reports — real screenshot with hover-tooltip overlays -->
+<section class="slide" data-slide="9">
+  <div class="slide-title">
+    <h2>דוחות מקצועיים — מוכנים לישיבת הוועד</h2>
+    <span class="num">9 / 15</span>
+  </div>
+  <div class="slide-content" style="max-width:1300px;">
+    <!-- Real dashboard screenshot with simulated tooltips -->
+    <div style="position:relative;margin:0 auto 18px;max-width:1180px;">
+      <img src="screenshots/dashboard.png" alt="דשבורד גרפים" style="width:100%;display:block;border-radius:12px;box-shadow:0 25px 70px rgba(0,0,0,0.5);border:1px solid var(--border);">
+
+      <!-- Tooltip simulating hover on a tall bar in the bar chart -->
+      <div style="position:absolute;top:46%;left:60%;background:rgba(17,24,39,0.97);border:1px solid var(--accent);padding:8px 12px;border-radius:8px;font-size:11px;box-shadow:0 6px 20px rgba(0,0,0,0.7);pointer-events:none;line-height:1.5;direction:rtl;text-align:right;backdrop-filter:blur(4px);">
+        <div style="color:var(--accent);font-weight:700;font-size:12px;margin-bottom:3px;">📅 מרץ 2025</div>
+        <div style="color:var(--success);">בפועל: <strong>₪47,330</strong></div>
+        <div style="color:var(--accent-light);">צפוי: <strong>₪40,000</strong></div>
+      </div>
+
+      <!-- Tooltip simulating hover on a slice of the pie chart -->
+      <div style="position:absolute;top:62%;left:18%;background:rgba(17,24,39,0.97);border:1px solid var(--purple);padding:8px 12px;border-radius:8px;font-size:11px;box-shadow:0 6px 20px rgba(0,0,0,0.7);pointer-events:none;line-height:1.5;direction:rtl;text-align:right;backdrop-filter:blur(4px);">
+        <div style="color:var(--purple);font-weight:700;font-size:12px;margin-bottom:3px;">🔧 תחזוקה</div>
+        <div style="color:var(--text-2);"><strong>₪185,420</strong> · 29.6%</div>
+      </div>
+    </div>
+
+    <!-- Caption below the image -->
+    <div style="text-align:center;font-size:15px;color:var(--accent);font-weight:600;margin-bottom:18px;">
+      💡 עכבר מעל כל עמודה או חלק בגרף — רואים מיד את הסכום המדויק
+    </div>
+
+    <!-- 4 small features below -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:13px;text-align:center;">
+        <div style="font-size:22px;margin-bottom:4px;">📊</div>
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:2px;">עמודות חודשיות</h4>
+        <p style="font-size:11px;color:var(--text-2);">צפוי vs בפועל</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:13px;text-align:center;">
+        <div style="font-size:22px;margin-bottom:4px;">🥧</div>
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:2px;">פילוח קטגוריות</h4>
+        <p style="font-size:11px;color:var(--text-2);">הוצאות לפי סוג</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:13px;text-align:center;">
+        <div style="font-size:22px;margin-bottom:4px;">📈</div>
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:2px;">KPIs מסכמים</h4>
+        <p style="font-size:11px;color:var(--text-2);">הכנסות, הוצאות, יתרה</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:13px;text-align:center;">
+        <div style="font-size:22px;margin-bottom:4px;">🔍</div>
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:2px;">דריל-דאון</h4>
+        <p style="font-size:11px;color:var(--text-2);">לחיצה לפירוט מלא</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 9: Data Management -->
+<section class="slide" data-slide="10">
+  <div class="slide-title">
+    <h2>קליטה, גיבוי ושיחזור — בלחיצה אחת</h2>
+    <span class="num">10 / 15</span>
+  </div>
+  <div class="slide-content">
+    <div class="two-col">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="dashboard-mockup" style="padding:16px;">
+          <div class="mock-header" style="margin-bottom:12px;padding-bottom:10px;">
+            <div class="mock-logo" style="background:linear-gradient(135deg, var(--success), #16a34a);">📥</div>
+            <div>
+              <div class="mock-title" style="font-size:13px;">קליטת קובץ דיירים מאקסל</div>
+              <div class="mock-sub">זיהוי עמודות אוטומטי</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:11px;">
+            <div style="display:flex;justify-content:space-between;padding:7px 11px;background:var(--panel);border-radius:7px;border:1px solid var(--border);">
+              <span>מספר דירה *</span><span style="color:var(--success);font-weight:600;">✓ עמודה A</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:7px 11px;background:var(--panel);border-radius:7px;border:1px solid var(--border);">
+              <span>שם בעל הדירה *</span><span style="color:var(--success);font-weight:600;">✓ עמודה B</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:7px 11px;background:var(--panel);border-radius:7px;border:1px solid var(--border);">
+              <span>סוג דירה</span><span style="color:var(--success);font-weight:600;">✓ עמודה C</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:7px 11px;background:var(--panel);border-radius:7px;border:1px solid var(--border);">
+              <span>יתרת פתיחה</span><span style="color:var(--success);font-weight:600;">✓ עמודה D</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:7px 11px;background:var(--panel);border-radius:7px;border:1px solid var(--border);">
+              <span>טלפון</span><span style="color:var(--success);font-weight:600;">✓ עמודה E</span>
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-mockup" style="padding:16px;">
+          <div class="mock-header" style="margin-bottom:12px;padding-bottom:10px;">
+            <div class="mock-logo" style="background:linear-gradient(135deg, var(--purple), #9333ea);">💾</div>
+            <div>
+              <div class="mock-title" style="font-size:13px;">גיבוי ושיחזור</div>
+              <div class="mock-sub">קובץ JSON אחד עם הכל</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:var(--panel);border:1px solid var(--success);border-radius:9px;padding:14px;text-align:center;">
+              <div style="font-size:28px;margin-bottom:6px;">📤</div>
+              <div style="font-size:12px;font-weight:700;">ייצוא הגדרות</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:3px;">JSON אחד עם הכל</div>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--accent);border-radius:9px;padding:14px;text-align:center;">
+              <div style="font-size:28px;margin-bottom:6px;">📥</div>
+              <div style="font-size:12px;font-weight:700;">ייבוא הגדרות</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:3px;">שיחזור מלא</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="ico">📊</div>
+          <div>
+            <h4>קליטה מאקסל</h4>
+            <p>יש לך קובץ אקסל מהגזבר הקודם? העלה — המערכת מזהה אוטומטית את העמודות. ללא הקלדה ידנית.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">🤖</div>
+          <div>
+            <h4>זיהוי חכם של עמודות</h4>
+            <p>"מספר דירה", "שם", "טלפון", "סוג דירה", "יתרת פתיחה" — המערכת מזהה לבד גם בעברית.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">💾</div>
+          <div>
+            <h4>גיבוי בלחיצה</h4>
+            <p>קובץ JSON אחד שכולל הכל: דיירים, מחירים, יתרות, ספקים, תשלומים. שלח במייל או שמור בדרייב.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="ico">🔄</div>
+          <div>
+            <h4>שיחזור מלא</h4>
+            <p>החלפת מחשב? התקנה מחדש? בחר את קובץ הגיבוי — והמערכת חוזרת לאן שעצרת. מאומת.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 10: Privacy -->
+<section class="slide" data-slide="11">
+  <div class="slide-title">
+    <h2>הנתונים שלך, אצלך</h2>
+    <span class="num">11 / 15</span>
+  </div>
+  <div class="slide-content" style="text-align:center;max-width:1100px;">
+    <div class="local-shield" style="width:170px;height:170px;font-size:84px;margin-bottom:26px;">🔐</div>
+    <h2 style="font-size:34px;margin-bottom:14px;">אין שרת. אין מתווך. אין צד שלישי.</h2>
+    <p style="font-size:18px;max-width:780px;margin:0 auto 44px;">
+      התוכנה רצה <strong style="color:var(--accent);">במחשב שלך בלבד</strong>.
+      הנתונים הפיננסיים של הבניין לא עוזבים את המכשיר שלך אף פעם.
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center;">
+        <div style="font-size:46px;margin-bottom:10px;">⚡</div>
+        <h4 style="font-size:18px;font-weight:700;margin-bottom:8px;">עובד אופליין</h4>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.5;">אחרי הטעינה הראשונה, אין צורך באינטרנט. עובד גם בנסיעה או בנייטש.</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center;">
+        <div style="font-size:46px;margin-bottom:10px;">📦</div>
+        <h4 style="font-size:18px;font-weight:700;margin-bottom:8px;">גיבוי בענן שלך</h4>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.5;">קובץ אחד שאתה שולח לעצמך במייל או שומר ב-Drive — הכל אצלך.</p>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center;">
+        <div style="font-size:46px;margin-bottom:10px;">🚀</div>
+        <h4 style="font-size:18px;font-weight:700;margin-bottom:8px;">מהיר במיוחד</h4>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.5;">בלי "השרת לא זמין". בלי טעינות מתמשכות. הכל מיידי.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 11: Comparison -->
+<section class="slide" data-slide="12">
+  <div class="slide-title">
+    <h2>למה זה שונה?</h2>
+    <span class="num">12 / 15</span>
+  </div>
+  <div class="slide-content">
+    <table class="compare">
+      <thead>
+        <tr>
+          <th></th>
+          <th>אקסל</th>
+          <th>תוכנות אחרות</th>
+          <th class="us">ועד בית</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>זיהוי אוטומטי של תשלומי דיירים</td>
+          <td class="no">✗</td>
+          <td class="partial">חלקי</td>
+          <td class="us yes">✓ מלא</td>
+        </tr>
+        <tr>
+          <td>תמיכה ביתרות פתיחה מגזבר קודם</td>
+          <td class="partial">ידני</td>
+          <td class="partial">חלקי</td>
+          <td class="us yes">✓ מובנה</td>
+        </tr>
+        <tr>
+          <td>FIFO חוצה-מקורות (חשבונאית נכון)</td>
+          <td class="no">✗</td>
+          <td class="no">✗</td>
+          <td class="us yes">✓ ייחודי</td>
+        </tr>
+        <tr>
+          <td>מעקב ספקים והוצאות קבועות</td>
+          <td class="partial">ידני</td>
+          <td class="yes">✓</td>
+          <td class="us yes">✓ אוטומטי</td>
+        </tr>
+        <tr>
+          <td>גרפים ודוחות מקצועיים</td>
+          <td class="partial">צריך לבנות</td>
+          <td class="yes">✓</td>
+          <td class="us yes">✓ מובנה</td>
+        </tr>
+        <tr>
+          <td>נתונים פרטיים — בלי ענן</td>
+          <td class="yes">✓</td>
+          <td class="no">✗</td>
+          <td class="us yes">✓</td>
+        </tr>
+        <tr>
+          <td>תמיכה בעברית מלאה (RTL)</td>
+          <td class="yes">✓</td>
+          <td class="partial">חלקי</td>
+          <td class="us yes">✓ נולדה לעברית</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Slide 12: Roadmap — coming soon (mobile + cloud sync + payment processing) -->
+<section class="slide" data-slide="13">
+  <div class="slide-title">
+    <h2>בקרוב — מה מתוכנן להמשך</h2>
+    <span class="num">13 / 15</span>
+  </div>
+  <div class="slide-content" style="max-width:1300px;">
+    <div class="two-col" style="grid-template-columns:1fr 1.2fr;align-items:center;gap:48px;">
+      <!-- Phone illustration with mini dashboard inside -->
+      <div style="display:flex;justify-content:center;align-items:center;">
+        <div style="width:230px;height:460px;background:#0b1020;border:8px solid #2a374f;border-radius:38px;padding:32px 10px 14px;position:relative;box-shadow:0 30px 80px rgba(0,0,0,0.55), 0 0 0 2px rgba(255,255,255,0.04) inset;">
+          <!-- Notch -->
+          <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:90px;height:22px;background:#000;border-radius:0 0 14px 14px;"></div>
+          <!-- Screen content -->
+          <div style="background:var(--bg-2);border-radius:22px;height:100%;padding:14px 12px;display:flex;flex-direction:column;gap:9px;">
+            <!-- Mini header -->
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:linear-gradient(180deg, rgba(124,167,255,0.18), rgba(124,167,255,0.02));border-radius:8px;">
+              <div style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg, var(--accent), var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:10px;">VB</div>
+              <div style="font-size:11px;font-weight:700;flex:1;">משורר ישעיהו 6</div>
+            </div>
+            <!-- KPI -->
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:10px;">
+              <div style="font-size:9px;color:var(--muted);">חוב פתוח</div>
+              <div style="font-size:20px;font-weight:800;color:var(--danger);">₪ 16K</div>
+            </div>
+            <div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px;">סטטוס דירות</div>
+            <!-- Mini list -->
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:7px 9px;font-size:10px;display:flex;justify-content:space-between;align-items:center;">
+              <span><strong style="color:var(--accent);">1</strong> דודי בן דוד</span>
+              <span style="color:var(--success);font-weight:700;">✓</span>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:7px 9px;font-size:10px;display:flex;justify-content:space-between;align-items:center;">
+              <span><strong style="color:var(--accent);">3</strong> אורי רוסנק</span>
+              <span style="color:var(--warning);font-weight:700;">חלקי</span>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:7px 9px;font-size:10px;display:flex;justify-content:space-between;align-items:center;">
+              <span><strong style="color:var(--accent);">26</strong> שירה לוי</span>
+              <span style="color:var(--danger);font-weight:700;">חוב</span>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:7px 9px;font-size:10px;display:flex;justify-content:space-between;align-items:center;">
+              <span><strong style="color:var(--accent);">33</strong> בן דוד אסף</span>
+              <span style="color:var(--danger);font-weight:700;">חוב</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Right side: headline, description, additional roadmap items -->
+      <div>
+        <div style="display:inline-block;background:var(--accent);color:#fff;padding:5px 14px;border-radius:999px;font-size:12px;font-weight:700;margin-bottom:14px;">📱 בפיתוח</div>
+        <h2 style="font-size:32px;margin-bottom:14px;line-height:1.2;">צפייה מהנייד — הבניין שלך, בכל מקום</h2>
+        <p style="font-size:16px;color:var(--text-2);line-height:1.6;margin-bottom:22px;">
+          מהבית, מהדרך, מהקפה — בלחיצה אחת על הטלפון תראו מי שילם, מה סטטוס החוב, ואיזה ספק מחכה לתשלום. ממשק מותאם לטלפון, <strong style="color:var(--accent);">אותם נתונים בדיוק</strong>.
+        </p>
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:14px;">
+          <div style="font-size:13px;color:var(--text-2);font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+            <span style="font-size:16px;">⏭️</span> עוד שדרוגים שמתוכננים להמשך:
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px;">
+            <div style="display:flex;align-items:flex-start;gap:9px;">
+              <span style="font-size:20px;flex-shrink:0;">☁️</span>
+              <div>
+                <strong>סנכרון בענן</strong><br>
+                <span style="color:var(--text-2);font-size:12px;">לראות נתונים מכמה מכשירים</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:9px;">
+              <span style="font-size:20px;flex-shrink:0;">💳</span>
+              <div>
+                <strong>סליקת אשראי לדיירים</strong><br>
+                <span style="color:var(--text-2);font-size:12px;">קבלת תשלומים ישירות באתר</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:9px;">
+              <span style="font-size:20px;flex-shrink:0;">🏠</span>
+              <div>
+                <strong>השכרת חדר דיירים</strong><br>
+                <span style="color:var(--text-2);font-size:12px;">מחיר לדייר ולחיצוני, מעקב הזמנות</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:9px;">
+              <span style="font-size:20px;flex-shrink:0;">🧾</span>
+              <div>
+                <strong>אישורי תשלום אוטומטיים</strong><br>
+                <span style="color:var(--text-2);font-size:12px;">שליחה לכל דייר שמשלם</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg, rgba(124,167,255,0.18), rgba(124,167,255,0.04));border:1px solid var(--accent);border-radius:11px;padding:13px 18px;font-size:14px;color:var(--accent-light);font-weight:600;text-align:center;">
+          💎 לקוחות ראשונים מקבלים את כל השדרוגים האלה <strong>חינם</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 13: CTA -->
+<section class="slide" data-slide="14">
+  <div class="slide-title">
+    <h2>מוכן להתחיל?</h2>
+    <span class="num">14 / 15</span>
+  </div>
+  <div class="slide-content">
+    <div class="cta-grid">
+      <div class="pricing-card">
+        <span class="badge">לקוחות ראשונים</span>
+        <h3>מחיר השקה</h3>
+        <p style="color:var(--text-2);font-size:14px;margin-bottom:8px;">אתם בוחרים להיות חלק מהיציאה לשוק.</p>
+        <div class="price">₪ 110<small> / חודש</small></div>
+        <div style="background:linear-gradient(135deg, rgba(124,167,255,0.14), rgba(124,167,255,0.04));border:1px solid var(--accent);border-radius:11px;padding:14px 16px;margin:18px 0;text-align:center;">
+          <div style="font-size:16px;font-weight:800;color:var(--accent-light);margin-bottom:6px;">
+            ₪110 לחודש = פחות מ-₪1.60 לדירה
+          </div>
+          <div style="font-size:13px;color:var(--text-2);line-height:1.55;">
+            עלות זניחה לבניין — ערך עצום לסדר, לשקיפות, ולשקט נפשי
+          </div>
+        </div>
+        <ul>
+          <li>גישה מלאה לכל הפיצ'רים</li>
+          <li>הקמה אישית של הבניין שלך</li>
+          <li>תמיכה ישירה בוואטסאפ</li>
+          <li>שדרוג חינם לגרסת ענן (כשתצא)</li>
+          <li>ביטול בכל עת — בלי קנסות</li>
+        </ul>
+      </div>
+      <div class="contact-block">
+        <h3>בוא נדבר</h3>
+        <div class="contact-row">
+          <div class="ico">📞</div>
+          <div>
+            <div class="label">טלפון / וואטסאפ</div>
+            <div class="value">052-7246200</div>
+          </div>
+        </div>
+        <button class="cta-button" style="background:linear-gradient(135deg, #25D366, #128C7E);box-shadow:0 12px 32px rgba(37,211,102,0.35);display:inline-flex;align-items:center;gap:10px;justify-content:center;" onclick="window.open('https://wa.me/972527246200?text=' + encodeURIComponent('שלום, אני מעוניין לשמוע עוד על ועד בית'), '_blank');">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          שלח לי הודעה בוואטסאפ
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 14: Closing — emotional sign-off, with hero background image -->
+<section class="slide" data-slide="15" style="background:linear-gradient(to bottom, rgba(11,16,32,0.10) 0%, rgba(11,16,32,0.10) 30%, rgba(11,16,32,0.55) 55%, rgba(11,16,32,0.92) 80%, rgba(11,16,32,0.97) 100%), url('screenshots/14.png') center center / cover no-repeat var(--bg);">
+
+  <div class="slide-content" style="text-align:center;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;padding:0 0 80px 0;">
+    <!-- Logo: glass-style, sits above the brand text in the bottom content cluster -->
+    <div style="width:118px;height:118px;border-radius:24px;background:rgba(13, 100, 130, 0.22);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1.5px solid rgba(77, 208, 225, 0.45);display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:900;color:rgba(255, 255, 255, 0.98);letter-spacing:-2px;box-shadow:0 0 70px rgba(77, 208, 225, 0.35), 0 14px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);margin-bottom:24px;">
+      VB
+    </div>
+
+    <!-- Brand reminder -->
+    <div style="font-size:46px;color:var(--accent);font-weight:800;margin-bottom:12px;letter-spacing:0.01em;">ועד בית</div>
+    <div style="font-size:26px;color:var(--text-2);margin-bottom:46px;font-weight:500;">הפתרון החכם לניהול הבניין</div>
+
+    <!-- Statement on a single line, with the 3 colored gradients preserved per phrase -->
+    <div style="font-size:clamp(28px, 4.6vw, 50px);font-weight:900;letter-spacing:-0.01em;line-height:1.25;white-space:nowrap;">
+      <span style="background:linear-gradient(135deg, #ffffff 0%, #b9c2d6 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">פחות עבודה.</span>
+      <span style="background:linear-gradient(135deg, #7ca7ff 0%, #5b8dee 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-right:14px;">יותר שליטה.</span>
+      <span style="background:linear-gradient(135deg, #34d399 0%, #16a34a 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-right:14px;">הרבה יותר שקט.</span>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- Navigation controls -->
+<div class="controls">
+  <button class="ctrl-btn" id="btnPrev" title="הקודם">▶</button>
+  <div class="dots" id="dots"></div>
+  <button class="ctrl-btn" id="btnNext" title="הבא">◀</button>
+  <span class="slide-counter" id="counter">1 / 15</span>
+  <button class="ctrl-btn" id="btnFull" title="מסך מלא (F)">⛶</button>
+</div>
+
+<div class="help-hint">חיצים ← → לניווט · F למסך מלא · Esc יציאה</div>
+
+<script>
+(function() {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let current = 0;
+
+  // Build dots
+  const dotsContainer = document.getElementById('dots');
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(dot);
+  });
+  const dots = Array.from(dotsContainer.children);
+
+  function goTo(idx) {
+    if (idx < 0 || idx >= total) return;
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = idx;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+    document.getElementById('btnPrev').disabled = current === 0;
+    document.getElementById('btnNext').disabled = current === total - 1;
+  }
+
+  document.getElementById('btnPrev').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('btnNext').addEventListener('click', () => goTo(current + 1));
+
+  document.getElementById('btnFull').addEventListener('click', () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    // RTL: ArrowLeft = next, ArrowRight = prev
+    if (e.key === 'ArrowLeft' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+    else if (e.key === 'ArrowRight' || e.key === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+    else if (e.key === 'Home') goTo(0);
+    else if (e.key === 'End') goTo(total - 1);
+    else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    }
+    else if (e.key === 'Escape') {
+      if (document.fullscreenElement) document.exitFullscreen();
+    }
+  });
+
+  // Initial state
+  goTo(0);
+})();
+</script>
+</body>
+</html>
