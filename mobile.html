@@ -334,6 +334,187 @@ p.section-lead {
 .apt-mock-row .month { color: var(--text-2); }
 .apt-mock-row .amt { font-weight: 600; color: var(--danger); font-variant-numeric: tabular-nums; }
 
+/* ============== Generic mockup (collection table, suppliers, etc.) ============== */
+.mockup {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin: 18px 0;
+  overflow: hidden;
+}
+.mockup-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.mockup-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.mockup-title {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.2;
+}
+.mockup-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.mockup-table {
+  display: flex;
+  flex-direction: column;
+}
+.mockup-row {
+  display: grid;
+  align-items: center;
+  padding: 8px 4px;
+  font-size: 12px;
+  border-bottom: 1px dashed rgba(255,255,255,0.06);
+  gap: 6px;
+}
+.mockup-row:last-child { border-bottom: none; }
+.mockup-row.header {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+}
+.mockup-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 100px;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+.mockup-badge.green { background: rgba(52,211,153,0.18); color: var(--success); }
+.mockup-badge.red { background: rgba(239,68,68,0.18); color: var(--danger); }
+.mockup-badge.yellow { background: rgba(245,158,11,0.18); color: var(--warning); }
+.mockup-badge.teal { background: rgba(77,208,225,0.18); color: var(--teal); }
+
+/* Building Config: 2x2 grid of apartment-type cards */
+.types-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.type-card {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+}
+.type-card.special { border-color: rgba(192,132,252,0.35); }
+.type-card .name {
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.type-card .count {
+  font-size: 10px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.type-card .price {
+  font-size: 11px;
+  padding: 4px 7px;
+  background: rgba(124,167,255,0.18);
+  color: var(--accent);
+  border-radius: 5px;
+  font-weight: 600;
+  display: inline-block;
+}
+.type-card.special .price {
+  background: rgba(192,132,252,0.18);
+  color: var(--purple);
+}
+
+/* Documents: transaction row with attach button + floating popup */
+.doc-tx {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(124,167,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+.doc-tx-info { font-size: 12px; }
+.doc-tx-info .sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.doc-tx-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.doc-tx-btn.attached { background: rgba(52,211,153,0.18); color: var(--success); border: 1px solid rgba(52,211,153,0.40); }
+.doc-tx-btn.empty { background: transparent; color: var(--muted); border: 1px dashed var(--border); }
+
+/* Data Management: column mapping rows */
+.col-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 11px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 5px;
+  font-size: 12px;
+}
+.col-row .col-name { font-weight: 500; }
+.col-row .col-match {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--success);
+  background: rgba(52,211,153,0.10);
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+.backup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+.backup-card {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+}
+.backup-card.export { border-color: rgba(52,211,153,0.40); }
+.backup-card.import { border-color: rgba(124,167,255,0.40); }
+.backup-card .icon { font-size: 26px; margin-bottom: 5px; }
+.backup-card .title { font-size: 12px; font-weight: 700; }
+.backup-card .sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
 /* ============== Real-time debt callout ============== */
 .live-callout {
   display: inline-flex;
@@ -696,6 +877,37 @@ p.section-lead {
     <h3>תמיכה ביתרות פתיחה</h3>
     <p>גזבר חדש? הזן את החוב מהגזבר הקודם — המערכת תשלב את זה בכל החישובים. אפשר לקלוט גם 5 שנים אחורה.</p>
   </div>
+
+  <!-- Auto Collection mockup: payment table with bank/FIFO/debt status -->
+  <div class="mockup">
+    <div class="mockup-head">
+      <div class="mockup-logo" style="background:linear-gradient(135deg, var(--success), #16a34a);">💰</div>
+      <div>
+        <div class="mockup-title">טבלת גבייה</div>
+        <div class="mockup-sub">חודש מאי 2026</div>
+      </div>
+    </div>
+    <div class="mockup-table">
+      <div class="mockup-row header" style="grid-template-columns: 36px 1fr 70px 80px;">
+        <div>דירה</div><div>שם</div><div>סכום</div><div>סטטוס</div>
+      </div>
+      <div class="mockup-row" style="grid-template-columns: 36px 1fr 70px 80px;background:rgba(34,197,94,0.06);">
+        <div><strong>5</strong></div><div>אבי כהן</div><div>₪565</div><div><span class="mockup-badge green">בנק 03/05</span></div>
+      </div>
+      <div class="mockup-row" style="grid-template-columns: 36px 1fr 70px 80px;background:rgba(34,197,94,0.06);">
+        <div><strong>11</strong></div><div>יעל א.</div><div>₪565</div><div><span class="mockup-badge green">בנק 02/05</span></div>
+      </div>
+      <div class="mockup-row" style="grid-template-columns: 36px 1fr 70px 80px;background:rgba(245,158,11,0.06);">
+        <div><strong>19</strong></div><div>יניב בוסי</div><div>₪1,130</div><div><span class="mockup-badge yellow">FIFO</span></div>
+      </div>
+      <div class="mockup-row" style="grid-template-columns: 36px 1fr 70px 80px;background:rgba(239,68,68,0.06);">
+        <div><strong>26</strong></div><div>שירה לוי</div><div>₪0</div><div><span class="mockup-badge red">חוב</span></div>
+      </div>
+      <div class="mockup-row" style="grid-template-columns: 36px 1fr 70px 80px;background:rgba(34,197,94,0.06);">
+        <div><strong>44</strong></div><div>אריק ס.</div><div>₪1,695</div><div><span class="mockup-badge green">מראש</span></div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ============== LIVE DEBT (Apartment Card) ============== -->
@@ -734,6 +946,39 @@ p.section-lead {
   <h2 class="section-title">מותאם לכל סוג בית</h2>
   <p class="section-lead">בניינים אינם זהים. דירות 5 חדרים, פנטהאוזים, דופלקסים, חברי ועד עם הנחה — כל אחד עם המחיר המתאים. שינוי = לחיצה אחת, בלי טבלאות אקסל.</p>
 
+  <!-- Building Config mockup: 4 apartment-type cards -->
+  <div class="mockup">
+    <div class="mockup-head">
+      <div class="mockup-logo" style="background:linear-gradient(135deg, var(--success), #16a34a);">⚙</div>
+      <div>
+        <div class="mockup-title">סוגי דירות</div>
+        <div class="mockup-sub">היסטוריית מחירים אוטומטית</div>
+      </div>
+    </div>
+    <div class="types-grid">
+      <div class="type-card">
+        <div class="name">5 חדרים</div>
+        <div class="count">56 דירות</div>
+        <div class="price">₪565 ✓</div>
+      </div>
+      <div class="type-card">
+        <div class="name">פנטהאוז</div>
+        <div class="count">4 דירות</div>
+        <div class="price">₪780 ✓</div>
+      </div>
+      <div class="type-card">
+        <div class="name">דופלקס</div>
+        <div class="count">4 דירות</div>
+        <div class="price">₪1,000 ✓</div>
+      </div>
+      <div class="type-card special">
+        <div class="name">חברי ועד</div>
+        <div class="count">3 דירות</div>
+        <div class="price">₪283 ✓</div>
+      </div>
+    </div>
+  </div>
+
   <div class="card teal">
     <div class="card-icon">🏠</div>
     <h3>שיוך דירה לסוג</h3>
@@ -762,6 +1007,42 @@ p.section-lead {
   <h2 class="section-title">ספקים: שליטה מלאה על ההוצאות</h2>
   <p class="section-lead">המערכת מזהה לבד תשלומים יוצאים מהבנק לפי שם הספק. תדירויות גמישות (חודשי, רבעוני, שנתי) וגם ספקים בסכום משתנה — חשמל, מים — שמופקים מהם ממוצעים.</p>
 
+  <!-- Suppliers mockup: table of suppliers with frequency + payment status -->
+  <div class="mockup">
+    <div class="mockup-head">
+      <div class="mockup-logo" style="background:linear-gradient(135deg, var(--purple), #9333ea);">📤</div>
+      <div>
+        <div class="mockup-title">ספקי הבניין</div>
+        <div class="mockup-sub">מעקב אוטומטי לפי תנועות בנק</div>
+      </div>
+    </div>
+    <div class="mockup-table">
+      <div class="mockup-row header" style="grid-template-columns: 1fr 56px 70px;">
+        <div>ספק</div><div>תדירות</div><div>סטטוס</div>
+      </div>
+      <div class="mockup-row" style="grid-template-columns: 1fr 56px 70px;">
+        <div><strong>אחזקה — אמיר</strong><div style="font-size:10px;color:var(--muted);margin-top:2px;">₪20,000</div></div>
+        <div style="font-size:10px;">חודשי</div>
+        <div><span class="mockup-badge green">שולם</span></div>
+      </div>
+      <div class="mockup-row" style="grid-template-columns: 1fr 56px 70px;">
+        <div><strong>חברת חשמל</strong><div style="font-size:10px;color:var(--muted);margin-top:2px;">סכום משתנה</div></div>
+        <div style="font-size:10px;">דו-חודשי</div>
+        <div><span class="mockup-badge teal">משתנה</span></div>
+      </div>
+      <div class="mockup-row" style="grid-template-columns: 1fr 56px 70px;">
+        <div><strong>ביטוח שנתי</strong><div style="font-size:10px;color:var(--muted);margin-top:2px;">₪8,400</div></div>
+        <div style="font-size:10px;">שנתי</div>
+        <div><span class="mockup-badge green">שולם</span></div>
+      </div>
+      <div class="mockup-row" style="grid-template-columns: 1fr 56px 70px;">
+        <div><strong>ניקיון</strong><div style="font-size:10px;color:var(--muted);margin-top:2px;">₪2,500</div></div>
+        <div style="font-size:10px;">חודשי</div>
+        <div><span class="mockup-badge yellow">ממתין</span></div>
+      </div>
+    </div>
+  </div>
+
   <div class="card teal">
     <div class="card-icon">🏷️</div>
     <h3>זיהוי לפי שם בבנק</h3>
@@ -784,6 +1065,34 @@ p.section-lead {
   <span class="eyebrow">תיעוד דיגיטלי</span>
   <h2 class="section-title">חוזים וחשבוניות — בלחיצה אחת</h2>
   <p class="section-lead">צרף <strong>חוזה התקשרות</strong> בכרטיס הספק. צרף <strong>חשבונית</strong> לכל תשלום בודד. הכל מאוחסן בתוך המערכת — גם 5 שנים אחורה זמין מיידית.</p>
+
+  <!-- Documents mockup: transaction rows with attached/empty buttons + popup hint -->
+  <div class="mockup">
+    <div class="mockup-head">
+      <div class="mockup-logo" style="background:linear-gradient(135deg, var(--purple), #9333ea);">📤</div>
+      <div>
+        <div class="mockup-title">אחזקה — אמיר</div>
+        <div class="mockup-sub">תנועות בנק שזוהו</div>
+      </div>
+    </div>
+    <div class="doc-tx">
+      <div class="doc-tx-info">
+        <div>🏦 03/04/2026 · ₪5,000</div>
+        <div class="sub">תשלום ועד הבית - אמיר</div>
+      </div>
+      <a class="doc-tx-btn attached">📎 חשבונית מרץ</a>
+    </div>
+    <div class="doc-tx">
+      <div class="doc-tx-info">
+        <div>🏦 03/05/2026 · ₪5,000</div>
+        <div class="sub">תשלום ועד הבית - אמיר</div>
+      </div>
+      <a class="doc-tx-btn empty">📎 צרף</a>
+    </div>
+    <div style="margin-top:10px;padding:10px 12px;background:rgba(124,167,255,0.08);border:1px solid var(--accent);border-radius:9px;font-size:11px;color:var(--text-2);line-height:1.5;">
+      <strong style="color:var(--accent);">💡 צרוף קישור:</strong> Google Drive / Dropbox — הקובץ נשאר אצלך, אנחנו רק שומרים את הקישור.
+    </div>
+  </div>
 
   <div class="card purple">
     <div class="card-icon">📑</div>
@@ -841,6 +1150,50 @@ p.section-lead {
   <span class="eyebrow">קליטה וגיבוי</span>
   <h2 class="section-title">להתחיל זה קל. בלחיצה אחת.</h2>
   <p class="section-lead">קובץ אקסל מהגזבר הקודם? תעלה — והמערכת תזהה את העמודות לבד. וכשתרצה — קובץ אחד שמכיל את כל המערכת, לגיבוי או למעבר מחשב.</p>
+
+  <!-- Data Management mockup: column mapping + backup buttons -->
+  <div class="mockup">
+    <div class="mockup-head">
+      <div class="mockup-logo" style="background:linear-gradient(135deg, var(--success), #16a34a);">📥</div>
+      <div>
+        <div class="mockup-title">קליטת אקסל דיירים</div>
+        <div class="mockup-sub">זיהוי עמודות אוטומטי</div>
+      </div>
+    </div>
+    <div class="col-row">
+      <span class="col-name">מספר דירה *</span>
+      <span class="col-match">✓ עמודה A</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">שם בעל הדירה *</span>
+      <span class="col-match">✓ עמודה B</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">סוג דירה</span>
+      <span class="col-match">✓ עמודה C</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">יתרת פתיחה</span>
+      <span class="col-match">✓ עמודה D</span>
+    </div>
+    <div class="col-row">
+      <span class="col-name">טלפון</span>
+      <span class="col-match">✓ עמודה E</span>
+    </div>
+
+    <div class="backup-grid">
+      <div class="backup-card export">
+        <div class="icon">📤</div>
+        <div class="title">ייצוא הגדרות</div>
+        <div class="sub">JSON אחד עם הכל</div>
+      </div>
+      <div class="backup-card import">
+        <div class="icon">📥</div>
+        <div class="title">ייבוא הגדרות</div>
+        <div class="sub">שיחזור מלא</div>
+      </div>
+    </div>
+  </div>
 
   <div class="card success">
     <div class="card-icon">📊</div>
