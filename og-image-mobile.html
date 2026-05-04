@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 1200px;
+  height: 630px;
+  font-family: 'Heebo', sans-serif;
+  color: #fff;
+  background:
+    linear-gradient(135deg, #0b1020 0%, #1a2236 50%, #0b1020 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Decorative glow blobs */
+body::before {
+  content: '';
+  position: absolute;
+  top: -150px;
+  right: -150px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(77,208,225,0.30) 0%, transparent 60%);
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: absolute;
+  bottom: -200px;
+  left: -200px;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(124,167,255,0.20) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 50px 70px;
+  direction: ltr; /* override body RTL just for layout flow */
+}
+.wrap > * { direction: rtl; } /* but keep content RTL */
+
+/* === Phone mockup === */
+.phone {
+  width: 240px;
+  height: 480px;
+  background: #0b1020;
+  border: 8px solid #2a374f;
+  border-radius: 42px;
+  flex-shrink: 0;
+  position: relative;
+  box-shadow:
+    0 0 100px rgba(77,208,225,0.35),
+    0 30px 80px rgba(0,0,0,0.7),
+    inset 0 2px 0 rgba(255,255,255,0.05);
+  padding: 12px;
+}
+.phone::after {
+  content: '';
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 78px;
+  height: 22px;
+  background: #000;
+  border-radius: 100px;
+  z-index: 5;
+}
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at top, rgba(124,167,255,0.15), transparent 50%),
+    linear-gradient(180deg, #111827 0%, #0b1020 100%);
+  border-radius: 32px;
+  padding: 60px 14px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+.phone-logo {
+  width: 64px;
+  height: 64px;
+  background: rgba(13, 100, 130, 0.30);
+  border: 2px solid rgba(77, 208, 225, 0.55);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 28px;
+  color: #fff;
+  letter-spacing: -1px;
+  box-shadow:
+    0 0 30px rgba(77, 208, 225, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  margin-bottom: 14px;
+}
+.phone-title {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+  color: #fff;
+}
+.phone-tagline {
+  font-size: 12px;
+  color: #4dd0e1;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.phone-cards {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.phone-card {
+  background: rgba(36,48,73,0.85);
+  border: 1px solid rgba(77,208,225,0.18);
+  border-radius: 11px;
+  padding: 10px 11px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.phone-card .ico {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(124,167,255,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.phone-card .lbl {
+  font-size: 11px;
+  font-weight: 700;
+  color: #e8ecf4;
+  text-align: right;
+  flex: 1;
+}
+.phone-card.green .ico { background: rgba(52,211,153,0.20); }
+.phone-card.purple .ico { background: rgba(192,132,252,0.20); }
+.phone-card.warning .ico { background: rgba(245,158,11,0.20); }
+
+/* === Right text content === */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  padding: 0 30px 0 0;
+  max-width: 720px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(77,208,225,0.15);
+  border: 2px solid rgba(77,208,225,0.50);
+  padding: 10px 22px;
+  border-radius: 100px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #4dd0e1;
+  margin-bottom: 28px;
+  box-shadow: 0 0 30px rgba(77,208,225,0.20);
+}
+.title {
+  font-size: 80px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  background: linear-gradient(135deg, #fff 0%, #b9c2d6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 22px;
+}
+.tagline {
+  font-size: 32px;
+  color: #b9c2d6;
+  font-weight: 600;
+  margin-bottom: 32px;
+  line-height: 1.3;
+}
+.cta-line {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cta-line .arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(77,208,225,0.20);
+  border: 2px solid rgba(77,208,225,0.50);
+  border-radius: 50%;
+  font-size: 16px;
+  color: #4dd0e1;
+}
+.cta-line .accent {
+  color: #4dd0e1;
+}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Phone mockup (will appear on LEFT due to LTR wrap) -->
+    <div class="phone">
+      <div class="phone-screen">
+        <div class="phone-logo">VB</div>
+        <div class="phone-title">ועד בית</div>
+        <div class="phone-tagline">הפתרון החכם</div>
+        <div class="phone-cards">
+          <div class="phone-card green">
+            <div class="ico">💰</div>
+            <div class="lbl">גבייה אוטומטית</div>
+          </div>
+          <div class="phone-card">
+            <div class="ico">📊</div>
+            <div class="lbl">דוחות חיים</div>
+          </div>
+          <div class="phone-card purple">
+            <div class="ico">📤</div>
+            <div class="lbl">מעקב ספקים</div>
+          </div>
+          <div class="phone-card warning">
+            <div class="ico">🔒</div>
+            <div class="lbl">פרטיות מלאה</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text content -->
+    <div class="content">
+      <div class="badge">📱 מותאם לנייד</div>
+      <div class="title">ועד בית<br>בכף היד.</div>
+      <div class="tagline">פחות עבודה.<br>יותר שליטה.</div>
+      <div class="cta-line"><span class="arrow">←</span><span><span class="accent">דקה וחצי</span> · כל המידע</span></div>
+    </div>
+  </div>
+</body>
+</html>
